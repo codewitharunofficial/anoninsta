@@ -66,10 +66,10 @@ const SearchBar = ({ route, setRoute }) => {
          e?.preventDefault();
     try {
       const { data } = await axios.post(
-        `http://192.168.138.47:8081/user/${userName}`
+        `https://instagram-api-mhg3.onrender.com/user/${userName}`
       );
       if(data?.success){
-        const stories = await axios.post(`http://192.168.138.47:8081/stories/${userName}`);
+        const stories = await axios.post(`https://instagram-api-mhg3.onrender.com/stories/${userName}`);
         console.log(stories.data?.stories?.result);
         if(stories.data.success){
           const searchDetails = {
