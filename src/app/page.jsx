@@ -16,7 +16,7 @@ const Home = () => {
     if(route){
       router.push('/profile')
     }
-  }, [route]);
+  }, [route, router]);
 
   return (
     <SearchBar setRoute={setRoute} route={route} />
