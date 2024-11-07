@@ -17,22 +17,26 @@ const ProfileData = ({
 }) => {
   const { activeTab, setActiveTab } = useTabs();
 
-  const [dimensions, setDimensions] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-  useEffect(() => {
-    const handleResize = () => {
+useEffect(() => {
+    // Check if `window` is available to ensure we're on the client side
+    if (typeof window !== "undefined") {
       setDimensions({
         width: window.innerWidth,
         height: window.innerHeight,
       });
-    };
 
-    window.addEventListener('resize', handleResize);
+      const handleResize = () => {
+        setDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      };
 
-    return () => window.removeEventListener('resize', handleResize);
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
   
 
