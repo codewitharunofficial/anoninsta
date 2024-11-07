@@ -17,8 +17,24 @@ const ProfileData = ({
 }) => {
   const { activeTab, setActiveTab } = useTabs();
 
-  const height = window.screen.height;
-  const width = window.screen.width;
+  const [dimensions, setDimensions] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
 
   function formatCounts(count) {
     if (count > 999) {
@@ -73,7 +89,7 @@ const ProfileData = ({
         </div>
       </div>
       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div style={{ width: width }} className="self-center gap-10 h-auto p-5">
+      <div style={{ width: dimensions.width }} className="self-center gap-10 h-auto p-5">
         {activeTab === "Stories" ? (
           stories?.length > 0 ? (
             stories?.map((story, index) => (
@@ -81,8 +97,8 @@ const ProfileData = ({
                 key={index}
                 className="flex md:flex-row flex-wrap w-sm-100 cursor-pointer items-center gap-10 p-2"
                 style={{
-                  width: width < 500 ? "100%" : width * 0.5,
-                  height: height * 0.6,
+                  width: dimensions.width < 500 ? "100%" : dimensions.width * 0.5,
+                  height: dimensions.height * 0.6,
                   border: "1px solid white",
                   borderRadius: 10,
                 }}
@@ -94,8 +110,8 @@ const ProfileData = ({
                       controls={true}
                       src={story?.video_versions[0]?.url}
                       style={{
-                        width: width < 500 ? "100%" : width * 0.5,
-                        height: height * 0.5,
+                        width: dimensions.width < 500 ? "100%" : dimensions.width * 0.5,
+                        height: dimensions.height * 0.5,
                       }}
                     />
                     <h4 className="text-center dark:text-black text-black m-2 dark:bg-white bg-black">
@@ -107,8 +123,8 @@ const ProfileData = ({
                     <img
                       src={story?.image_versions2?.candidates[0]?.url}
                       style={{
-                        width: width < 500 ? "100%" : width * 0.5,
-                        height: height * 0.5,
+                        width: dimensions.width < 500 ? "100%" : dimensions.width * 0.5,
+                        height: dimensions.height * 0.5,
                       }}
                     />
                     <h4 className="text-center dark:text-black text-black m-2 dark:bg-white bg-black">
