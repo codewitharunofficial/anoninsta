@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
-        <main className="w-screen h-screen items-center overflow-scroll" style={{paddingTop: "10%", background: "linear-gradient(10deg, rgba(0,212,255,1) 0%, rgba(188,18,223,1) 69%)"}}>
+        <main className="w-screen h-screen items-center overflow-scroll" style={{paddingTop: "20%", background: "linear-gradient(10deg, rgba(0,212,255,1) 0%, rgba(188,18,223,1) 69%)"}}>
           <UserProvider>
             <TabsProvider>{children}</TabsProvider>
           </UserProvider>

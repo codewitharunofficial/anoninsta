@@ -14,7 +14,7 @@ const Profile = () => {
   async function getHighlights() {
     try {
       const { data } = await axios.post(
-        `http://192.168.138.47:8081/highlights/${user?.user?.id}`
+        `https://instagram-api-mhg3.onrender.com/highlights/${user?.user?.id}`
       );
       
       if (data?.success) {

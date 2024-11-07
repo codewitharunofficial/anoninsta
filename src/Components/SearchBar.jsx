@@ -6,17 +6,19 @@ import { useUser } from "@/context/UserConext";
 const SearchBar = ({ route, setRoute }) => {
   const [userName, setUserName] = useState("");
   const { user, setUser } = useUser();
+  const [loading, setLoading] = useState();
 
   async function handleSubmit(e) {
     e?.preventDefault();
     try {
+      setLoading(true);
       const { data } = await axios.post(
-        `http://192.168.138.47:8081/user/${userName}`
+        `https://instagram-api-mhg3.onrender.com/user/${userName}`
       );
       if (data?.success) {
         console.log("user:", data);
         const stories = await axios.post(
-          `http://192.168.138.47:8081/stories/${userName}`
+          `https://instagram-api-mhg3.onrender.com/stories/${userName}`
         );
 
         if (stories.data.success) {
@@ -29,6 +31,7 @@ const SearchBar = ({ route, setRoute }) => {
             posts: [],
             highlights: [],
           });
+          setLoading(false);
           setRoute(true);
         } else {
           setUser({
@@ -40,10 +43,12 @@ const SearchBar = ({ route, setRoute }) => {
             highlights: [],
           });
           setRoute(true);
+          setLoading(false);
         }
       }
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   }
 
@@ -85,7 +90,7 @@ const SearchBar = ({ route, setRoute }) => {
           type="submit"
           className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-          Search
+          {loading ? <Loader /> : "Search"}
         </button>
       </div>
     </form>
