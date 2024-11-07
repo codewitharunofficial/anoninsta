@@ -8,7 +8,6 @@ const SearchHistory = () => {
   useEffect(() => {
     const data = localStorage.getItem("searchedUser");
     const users = JSON.parse(data);
-    console.log(users);
     if (users?.length > 0) {
       setHistory(users);
     }

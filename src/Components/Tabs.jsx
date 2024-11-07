@@ -1,6 +1,9 @@
+import { useTabs } from '@/context/TabContext'
 import React from 'react'
 
-const Tabs = ({setActiveTab, activeTab}) => {
+const Tabs = () => {
+
+  const {activeTab, setActiveTab} = useTabs();
 
   return (
     

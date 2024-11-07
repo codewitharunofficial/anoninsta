@@ -1,19 +1,20 @@
 "use client"
 import SearchBar from '@/Components/SearchBar'
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 const Home = () => {
 
   const [route, setRoute] = useState(false);
+  // const params = useParams();
+  // console.log(params);
 
   const router = useRouter();
 
 
   useEffect(() => {
     if(route){
-      console.log(route);
-      router.replace('/history/profile/0')
+      router.push('/profile')
     }
   }, [route]);
 

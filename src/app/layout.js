@@ -1,6 +1,8 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/Components/Header";
+import { UserProvider } from "@/context/UserConext";
+import { TabsProvider } from "@/context/TabContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -14,8 +16,9 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "Save-Instant  An Anonymous Instagram Story Viewer",
-  description: "It's an Anonymous Instagram Story Viewer App where user can watch instgram stories of any public user with letting knowing them by searching the username on the app",
+  title: "An Anonymous Instagram Profile Viewer",
+  description:
+    "It's an Anonymous Instagram Story Viewer App where user can watch instgram stories of any public user with letting knowing them by searching the username on the app",
 };
 
 export default function RootLayout({ children }) {
@@ -24,10 +27,12 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      <Header />
-      <main className="w-screen h-screen items-center" >
-        {children}
-      </main>
+        <Header />
+        <main className="w-screen h-screen items-center overflow-scroll" style={{paddingTop: "10%", background: "linear-gradient(10deg, rgba(0,212,255,1) 0%, rgba(188,18,223,1) 69%)"}}>
+          <UserProvider>
+            <TabsProvider>{children}</TabsProvider>
+          </UserProvider>
+        </main>
       </body>
     </html>
   );
