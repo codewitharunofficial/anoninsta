@@ -17,13 +17,13 @@ const SearchBar = ({ route, setRoute }) => {
         `https://instagram-api-mhg3.onrender.com/user/${userName}`
       );
       if (data?.success) {
-        console.log("user:", data);
+        console.warn("user:", data);
         const stories = await axios.post(
           `https://instagram-api-mhg3.onrender.com/stories/${userName}`
         );
 
         if (stories.data.success) {
-          console.log("Stories:", stories.data?.stories?.result);
+          console.warn("Stories:", stories.data?.stories?.result);
           setUser({
             user: data?.user,
             user_name: userName,
