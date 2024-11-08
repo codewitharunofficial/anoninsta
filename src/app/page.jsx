@@ -19,7 +19,10 @@ const Home = () => {
   }, [route, router]);
 
   return (
+    <>
+    <h3 className='text-center text-2xl m-5 text-white' >Anonimous Insta Profile Viewer</h3>
     <SearchBar setRoute={setRoute} route={route} />
+    </>
   )
 }
 

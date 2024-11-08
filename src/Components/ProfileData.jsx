@@ -61,7 +61,7 @@ const ProfileData = ({
           >
             {userName}
           </a>
-          <div className="flex flex-row flex-wrap w-100 items-center self-center justify-between p-5 gap-10">
+          <div className="flex flex-row flex-wrap items-center self-center justify-between p-5 gap-10 sm:p-2">
             <span>
               <h4 className="text-black">Posts: {posts_count}</h4>
             </span>
@@ -120,7 +120,7 @@ const ProfileData = ({
           ) : (
             <div className="flex flex-row w-full overflow-scroll justify-center self-center items-center gap-10 p-3 border-2 border-white rounded-md">
               <h3 className=" dark:text-white text-black">
-                It seems the user hasn't posted any stories in last 24 hours
+                It seems the user hasn&apos;t posted any stories in last 24 hours
               </h3>
             </div>
           )
