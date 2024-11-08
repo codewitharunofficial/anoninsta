@@ -14,12 +14,12 @@ const SearchBar = ({ route, setRoute }) => {
     try {
       setLoading(true);
       const { data } = await axios.post(
-        `http://192.168.138.47:8081/user/${userName}`
+        `https://instagram-api-mhg3.onrender.com/user/${userName}`
       );
       if (data?.success) {
         console.warn("user:", data);
         const stories = await axios.post(
-          `http://192.168.138.47:8081/stories/${userName}`
+          `https://instagram-api-mhg3.onrender.com/stories/${userName}`
         );
 
         if (stories.data.success) {
