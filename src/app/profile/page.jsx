@@ -9,20 +9,42 @@ import React, { useEffect, useState } from "react";
 const Profile = () => {
   const { user, setUser } = useUser();
   const { activeTab, setActiveTab } = useTabs();
+  const [isHighlightsLoading, setIsHighlightsLoading] = useState(false);
+  const [isPostsLoading, setIsPostsLoading] = useState(false);
+
   const router = useRouter();
 
   async function getHighlights() {
+    setIsHighlightsLoading(true);
     try {
       const { data } = await axios.post(
-        `https://instagram-api-mhg3.onrender.com/highlights/${user?.user?.id}`
+        `http://192.168.138.47:8081/highlights/${user?.user?.id}`
       );
-      
+
       if (data?.success) {
         setUser({ ...user, highlights: data?.highlights });
-        
+        setIsHighlightsLoading(false);
       }
     } catch (error) {
       console.log(error);
+      setIsHighlightsLoading(false);
+    }
+  }
+
+  async function getPosts() {
+    setIsPostsLoading(true);
+    try {
+      const { data } = await axios.post(
+        `http://192.168.138.47:8081/posts/${user?.user?.id}`
+      );
+      console.log(data?.posts);
+      if (data.success) {
+        setUser({ ...user, posts: data?.posts?.items });
+        setIsPostsLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsPostsLoading(false);
     }
   }
 
@@ -31,12 +53,16 @@ const Profile = () => {
       if (user?.highlights?.length === 0) {
         getHighlights();
       }
+    } else if (activeTab === "Profile") {
+      if (user?.posts?.length === 0) {
+      getPosts();
+      }
     }
   }, [activeTab]);
 
   useEffect(() => {
-    if(!user?.user){
-      router.replace('/');
+    if (!user?.user) {
+      router.replace("/");
     }
   }, [user?.user]);
 
@@ -50,6 +76,10 @@ const Profile = () => {
       followers={user?.user?.follower}
       following={user?.user?.following}
       highlights={user?.highlights}
+      isHighlightsLoading={isHighlightsLoading}
+      posts={user?.posts}
+      isPostsLoading={isPostsLoading}
+      posts_count={user?.user?.posts_count}
     />
   );
 };

@@ -3,6 +3,8 @@ import Tabs from "./Tabs";
 import moment from "moment";
 import { useTabs } from "@/context/TabContext";
 import HighlightTray from "./HighlightTray";
+import PageLoader from "./PageLoader";
+import UserPost from "./UserPost";
 
 const ProfileData = ({
   fullName,
@@ -14,31 +16,11 @@ const ProfileData = ({
   bio,
   posts,
   highlights,
+  isHighlightsLoading,
+  isPostsLoading,
+  posts_count
 }) => {
   const { activeTab, setActiveTab } = useTabs();
-
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-
-useEffect(() => {
-    // Check if `window` is available to ensure we're on the client side
-    if (typeof window !== "undefined") {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-
-      const handleResize = () => {
-        setDimensions({
-          width: window.innerWidth,
-          height: window.innerHeight,
-        });
-      };
-
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
-    }
-  }, []);
-  
 
   function formatCounts(count) {
     if (count > 999) {
@@ -56,9 +38,11 @@ useEffect(() => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-items-center self-center gap-5 p-10">
+    <div className="flex flex-col w-screen items-center justify-items-center self-center gap-5 p-10">
       <div
-        className="flex flex-col border-gray-100"
+        className={`flex flex-col w-screen border-gray-100 ${
+          stories?.length > 0 && "border-2 border-pink-600"
+        }`}
         style={{ width: 150, height: 150, borderRadius: 100 }}
       >
         <img
@@ -69,15 +53,18 @@ useEffect(() => {
 
       <div className="flex flex-col gap-5 p-5 items-center justify-items-center">
         <div className="flex flex-col self-center items-center bg-purple-400 rounded-md p-5">
-          <h4 className="text-black">{fullName}</h4>
+          <h3 className="text-black text-xl">{fullName}</h3>
           <a
             href={`https://www.instagram.com/${userName}`}
             target="_blank"
-            className="hover:underline underline-offset-2 text-blue-600 dark:text-blue-600 cursor-pointer"
+            className="underline underline-offset-2 text-blue-600 dark:text-blue-600 cursor-pointer"
           >
             {userName}
           </a>
           <div className="flex flex-row flex-wrap w-100 items-center self-center justify-between p-5 gap-10">
+            <span>
+              <h4 className="text-black">Posts: {posts_count}</h4>
+            </span>
             <span>
               <h4 className="text-black">
                 Followers: {formatCounts(followers)}
@@ -93,66 +80,72 @@ useEffect(() => {
         </div>
       </div>
       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div style={{ width: dimensions.width }} className="self-center gap-10 h-auto p-5">
+      <div className="w-screen flex flex-row flex-wrap self-center items-center gap-10 h-auto p-5">
         {activeTab === "Stories" ? (
           stories?.length > 0 ? (
             stories?.map((story, index) => (
               <div
                 key={index}
-                className="flex md:flex-row flex-wrap w-sm-100 cursor-pointer items-center gap-10 p-2"
+                className="flex flex-row w-96 h-2/5 flex-wrap w-sm-100 cursor-pointer items-center gap-10 p-2"
                 style={{
-                  width: dimensions.width < 500 ? "100%" : dimensions.width * 0.5,
-                  height: dimensions.height * 0.6,
                   border: "1px solid white",
                   borderRadius: 10,
                 }}
               >
                 {story?.video_versions ? (
-                  <div className="flex flex-col gap-5">
+                  <div className="flex w-96 flex-col gap-3 items-center ">
                     <video
+                      className="w-md-1/2 w-sm-full h-full"
                       onClick={(e) => console.log(e)}
                       controls={true}
                       src={story?.video_versions[0]?.url}
-                      style={{
-                        width: dimensions.width < 500 ? "100%" : dimensions.width * 0.5,
-                        height: dimensions.height * 0.5,
-                      }}
                     />
                     <h4 className="text-center dark:text-black text-black m-2 dark:bg-white bg-black">
-                      {moment(story?.taken_at).format("dd/mm/yyyy")}
+                      {moment(story?.taken_at).date()}
                     </h4>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-5">
                     <img
+                      className="w-md-1/2 w-sm-full h-full"
                       src={story?.image_versions2?.candidates[0]?.url}
-                      style={{
-                        width: dimensions.width < 500 ? "100%" : dimensions.width * 0.5,
-                        height: dimensions.height * 0.5,
-                      }}
                     />
                     <h4 className="text-center dark:text-black text-black m-2 dark:bg-white bg-black">
-                      {moment(story?.taken_at).format("dd/mm/yyyy")}
+                      {moment(story?.taken_at).date()}
                     </h4>
                   </div>
                 )}
               </div>
             ))
           ) : (
-            <h4 className="text-center dark:text-white text-black">
-              No Stories Available
-            </h4>
+            <div className="flex flex-row w-full overflow-scroll justify-center self-center items-center gap-10 p-3 border-2 border-white rounded-md">
+              <h3 className=" dark:text-white text-black">
+                It seems the user hasn't posted any stories in last 24 hours
+              </h3>
+            </div>
           )
-        ) : activeTab === "Posts" ? (
-          <h3 className="text-center dark:text-white text-black">Post</h3>
+        ) : activeTab === "Profile" ? (
+          posts?.length > 0 ? (
+            <UserPost posts={posts} posts_count={posts_count} />
+          ) : isPostsLoading ? (
+            <PageLoader content={"Posts"} />
+          ) : (
+            <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10 p-3 border-2 border-white rounded-md">
+              <h3 className=" dark:text-white text-black">
+                No Posts Available
+              </h3>
+            </div>
+          )
+        ) : isHighlightsLoading ? (
+          <PageLoader content={"Highlights..."} />
         ) : (
-          <div className="flex flex-row overflow-scroll self-center items-center gap-10 p-5">
+          <div className="flex flex-row w-full overflow-scroll justify-center self-center items-center gap-10 p-3 border-2 border-white rounded-md">
             {highlights?.length > 0 ? (
               highlights?.map((highlight, index) => (
                 <HighlightTray key={index} highlight={highlight} />
               ))
             ) : (
-              <h3 className="text-center dark:text-white text-black">
+              <h3 className=" dark:text-white text-black">
                 No Highlights Found For The User
               </h3>
             )}

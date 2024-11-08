@@ -7,7 +7,7 @@ const HighlightTray = ({ highlight }) => {
 
   async function getByassPassedImage(url) {
     const { data } = await axios.post(
-      `https://instagram-api-mhg3.onrender.com/highlight-cover/${encodeURIComponent(url)}`);
+      `http://192.168.138.47:8081/highlight-cover/${encodeURIComponent(url)}`);
     // console.log(data);
     setImageUrl(data);
   }
@@ -21,10 +21,12 @@ const HighlightTray = ({ highlight }) => {
   return (
     <div className="flex flex-col gap-1 p-2 items-center">
       <img
+      className="border-pink-600 border-2 cursor-pointer"
         src={imageUrl}
-        style={{ width: 100, height: 100, borderRadius: 50 }}
+        style={{ minWidth: 80, minHeight: 80, width: 80, height: 80, borderRadius: 40 }}
+
       />
-      <h4>{highlight?.title}</h4>
+      <h4 className="text-black dark:text-black hover:text-white hover:underline underline-offset-2" >{highlight?.title}</h4>
     </div>
   );
 };
