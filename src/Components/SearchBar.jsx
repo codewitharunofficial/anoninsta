@@ -54,7 +54,7 @@ const SearchBar = ({ route, setRoute }) => {
   }
 
   return (
-    <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
+    <form className="max-w-screen-sm self-center mx-auto" onSubmit={handleSubmit}>
       <label
         htmlFor="default-search"
         className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
