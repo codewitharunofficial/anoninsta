@@ -1,3 +1,4 @@
+import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 
@@ -19,22 +20,26 @@ const Comment = ({ comment }) => {
     if (comment?.user?.profile_pic_url) {
       getByassPassedImage(comment?.user?.profile_pic_url);
     }
-  }, [comment]);
+  }, [comment, comment?.user?.profile_pic_url]);
 
   return (
-    <div className="w-full flex flex-col gap-2">
-      <div className="flex flex-row gap-2">
+    <div className="w-full flex flex-col gap-2 " style={{borderBottom: "0.5px solid gray"}} >
+      <div className="flex w-1/2 flex-row gap-2 ">
         <img
           src={imageUrl}
           style={{ width: 30, height: 30 }}
           className="rounded-xl"
         />
-        <h3 className="text-black text-lg font-bold">{`${comment?.user?.username} ${comment?.user?.full_name}`}</h3>
+        <h3 className="text-blue-500 text-md font-bold underline underline-offset-2">{`${comment?.user?.username}`}</h3>
       </div>
-      <h4>{comment?.text}</h4>
-      <p>{moment(comment?.created_at).toDate()}</p>
+      <h4 className="text-black text-sm font-semibold ml-10" >{comment?.text}</h4>
+      <p className="text-gray-700 text-xs text-end" >{moment(comment?.created_at).toDate().toLocaleDateString()}</p>
     </div>
   );
 };
 
 export default Comment;
+
+const className = {
+  userName: ""
+}

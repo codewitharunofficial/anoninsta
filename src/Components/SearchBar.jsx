@@ -17,23 +17,36 @@ const SearchBar = ({ route, setRoute }) => {
         `https://instagram-api-mhg3.onrender.com/user/${userName}`
       );
       if (data?.success) {
-        console.warn("user:", data);
-        const stories = await axios.post(
-          `https://instagram-api-mhg3.onrender.com/stories/${userName}`
-        );
+        if (!data?.user?.isPrivate) {
+          const stories = await axios.post(
+            `https://instagram-api-mhg3.onrender.com/stories/${userName}`
+          );
 
-        if (stories.data.success) {
-          console.warn("Stories:", stories.data?.stories?.result);
-          setUser({
-            user: data?.user,
-            user_name: userName,
-            full_name: data?.user?.full_name,
-            stories: stories.data?.stories?.result,
-            posts: [],
-            highlights: [],
-          });
-          setLoading(false);
-          setRoute(true);
+          if (stories.data.success) {
+            setUser({
+              user: data?.user,
+              user_name: userName,
+              full_name: data?.user?.full_name,
+              stories: stories.data?.stories,
+              posts: [],
+              highlights: [],
+              comments: [],
+            });
+            setLoading(false);
+            setRoute(true);
+          } else {
+            setUser({
+              user: data?.user,
+              user_name: userName,
+              full_name: data?.user?.full_name,
+              stories: [],
+              posts: [],
+              highlights: [],
+              comments: [],
+            });
+            setLoading(false);
+            setRoute(true);
+          }
         } else {
           setUser({
             user: data?.user,
@@ -42,6 +55,7 @@ const SearchBar = ({ route, setRoute }) => {
             stories: [],
             posts: [],
             highlights: [],
+            comments: [],
           });
           setLoading(false);
           setRoute(true);
@@ -54,7 +68,10 @@ const SearchBar = ({ route, setRoute }) => {
   }
 
   return (
-    <form className="max-w-screen-sm self-center mx-auto" onSubmit={handleSubmit}>
+    <form
+      className="w-5/6 sm:w-4/5 place-self-center max-w-screen-sm mx-auto"
+      onSubmit={handleSubmit}
+    >
       <label
         htmlFor="default-search"
         className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -87,18 +104,16 @@ const SearchBar = ({ route, setRoute }) => {
           placeholder="Paste OR Type Username Here.."
           required
         />
-        {
-          !loading ? (
-            <button
-          type="submit"
-          className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-        {route ? "Redirecting..." : "Search"}
-        </button>
-          ) : (
-            <Loader />
-          )
-        }
+        {!loading ? (
+          <button
+            type="submit"
+            className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            {route ? "Redirecting..." : "Search"}
+          </button>
+        ) : (
+          <Loader />
+        )}
       </div>
     </form>
   );

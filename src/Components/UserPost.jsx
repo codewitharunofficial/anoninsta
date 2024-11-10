@@ -3,14 +3,19 @@ import moment from "moment";
 import axios from "axios";
 import { AiFillLike, AiFillPlayCircle } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
-import VideoModal from "./VideoModal";
+import PostModal from "./PostModal";
+import loading from "../app/Loading.gif"
 const UserPost = ({ post }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
 
-  const openModal = () => {setModalOpen(true)}
-  const closeModal = () => {setModalOpen(false)}
+  const openModal = () => {
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   async function getByassPassedImage(url) {
     setImageLoading(true);
@@ -24,8 +29,8 @@ const UserPost = ({ post }) => {
   }
 
   useEffect(() => {
-    if (post?.image_versions2?.candidates[0]?.url) {
-      getByassPassedImage(post?.image_versions2?.candidates[0]?.url);
+    if (post?.image_versions?.items[0]?.url) {
+      getByassPassedImage(post?.image_versions?.items[0]?.url);
     }
   }, [post]);
 
@@ -33,16 +38,26 @@ const UserPost = ({ post }) => {
 
   return (
     <div
-      className=" flex flex-row md:w-96 sm:w-4/5 w-4/5 h-2/5 flex-wrap w-sm-100 items-center gap-10 p-2  bg-gray-500 justify-center self-center relative"
+      className=" flex flex-row w-4/5 md:w-96 sm:w-4/5 h-2/5 flex-wrap items-center gap-10 p-2  bg-gray-500 justify-center self-center relative"
       style={{
         border: "1px solid white",
         borderRadius: 10,
       }}
     >
-    <VideoModal isOpen={isModalOpen} onClose={closeModal} videoUrl={post?.media_type === 2 ? post?.video_versions[0]?.url : ""} postCode={post?.code} />
+      {isModalOpen && (
+        <PostModal
+          postId={post?.pk}
+          onClose={closeModal}
+          url={post?.media_type === 2 ? post?.video_versions[0]?.url : imageUrl}
+          postCode={post?.code}
+          mediaType={post?.media_type}
+        />
+      )}
       <AiFillPlayCircle
-      onClick={() => {openModal()}}
-      className="hover:bg-black"
+        onClick={() => {
+          openModal();
+        }}
+        className="hover:bg-black"
         color="white"
         size={100}
         style={{
@@ -54,16 +69,32 @@ const UserPost = ({ post }) => {
           height: "50px",
           background: "rgba(0, 0, 0, 0.6)",
           borderRadius: "50%",
-          display: post?.media_type === 2 ? "flex" : "none",
+          display: post?.media_type === 2 && imageUrl ? "flex" : "none",
           alignItems: "center",
           justifyContent: "center",
           color: "#fff",
           cursor: "pointer",
         }}
       />
-      <div className="flex flex-col bg-gray-500">
-        <img className="w-md-1/2 w-sm-full h-full" src={imageUrl} />
-        <div className="flex flex-col items-center gap-2  bg-white w-full p-5">
+      <div className="flex w-full min-h-96 h-full flex-col bg-gray-500 items-center justify-center">
+        {
+          imageUrl ? (
+            <img
+          onClick={() => {
+            openModal();
+          }}
+          className=" max-h-96 min-h-96 cursor-pointer"
+          src={imageUrl}
+        />
+          ) : (
+          <img
+          className="place-self-center cursor-pointer"
+          src={loading?.src}
+          style={{width: 30, height: 30, mixBlendMode: "multiply"}}
+        />
+          )
+        }
+        <div className="flex flex-col items-center gap-2  bg-white w-full p-5 rounded-b-md">
           <div className="flex flex-row items-center justify-between w-full ">
             <h4 className="text-start dark:text-black text-black ">
               {post?.caption?.text?.slice(0, 60)}...

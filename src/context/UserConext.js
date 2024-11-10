@@ -10,7 +10,8 @@ export const UserProvider = ({children}) => {
         full_name: "",
         stories: [],
         posts: [],
-        highlights: []
+        highlights: [],
+        comments: []
     });
 
     return (

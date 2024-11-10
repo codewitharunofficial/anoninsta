@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/Components/Header";
 import { UserProvider } from "@/context/UserConext";
 import { TabsProvider } from "@/context/TabContext";
+import logo from "./logo.webp";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,8 +29,21 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
-        <main className="w-screen h-screen items-center overflow-scroll" style={{paddingTop: "20%", background: "linear-gradient(10deg, rgba(0,212,255,1) 0%, rgba(188,18,223,1) 69%)"}}>
+        <main
+          className="w-screen h-screen items-center overflow-scroll"
+          style={{
+            paddingTop: "20%",
+            background:
+              "linear-gradient(10deg, rgba(0,212,255,1) 0%, rgba(188,18,223,1) 69%)",
+          }}
+        >
           <UserProvider>
+            <div className="flex flex-col md:flex-row gap-1 w-full items-center justify-center mb-3 md:mb-10">
+              <img src={logo?.src} className="w-20 h-20 md:h-20 rounded-xl" />
+              <h3 className="text-center md:text-3xl text-xl m-5 text-white font-bold underline underline-offset-4">
+                Anonimous Instagram Viewer
+              </h3>
+            </div>
             <TabsProvider>{children}</TabsProvider>
           </UserProvider>
         </main>

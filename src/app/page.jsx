@@ -1,7 +1,8 @@
 "use client"
 import SearchBar from '@/Components/SearchBar'
 import { useParams, useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import logo from "./logo.webp";
 
 const Home = () => {
 
@@ -20,7 +21,6 @@ const Home = () => {
 
   return (
     <>
-    <h3 className='text-center text-2xl m-5 text-white' >Anonimous Insta Profile Viewer</h3>
     <SearchBar setRoute={setRoute} route={route} />
     </>
   )

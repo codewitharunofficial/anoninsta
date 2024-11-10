@@ -37,7 +37,7 @@ const Profile = () => {
       const { data } = await axios.post(
         `https://instagram-api-mhg3.onrender.com/posts/${user?.user?.id}`
       );
-      console.log(data?.posts);
+      
       if (data.success) {
         setUser({ ...user, posts: data?.posts?.items });
         setIsPostsLoading(false);
@@ -49,16 +49,16 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    if (activeTab === "Highlights") {
+    if (activeTab === "Highlights" && !user?.user?.isPrivate) {
       if (user?.highlights?.length === 0) {
         getHighlights();
       }
-    } else if (activeTab === "Profile") {
+    } else if (activeTab === "Profile" && !user?.user?.isPrivate) {
       if (user?.posts?.length === 0) {
-      getPosts();
+        getPosts();
       }
     }
-  }, [activeTab]);
+  }, [activeTab, user?.user?.isPrivate]);
 
   useEffect(() => {
     if (!user?.user) {
@@ -80,6 +80,7 @@ const Profile = () => {
       posts={user?.posts}
       isPostsLoading={isPostsLoading}
       posts_count={user?.user?.posts_count}
+      isPrivate={user?.user?.isPrivate}
     />
   );
 };

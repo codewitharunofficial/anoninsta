@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {  } from "react";
 import Tabs from "./Tabs";
-import moment from "moment";
 import { useTabs } from "@/context/TabContext";
 import HighlightTray from "./HighlightTray";
 import PageLoader from "./PageLoader";
 import UserPost from "./UserPost";
 import StoryCard from "./StoryCard";
-import {AiOutlineLink} from "react-icons/ai"
 
 const ProfileData = ({
   fullName,
@@ -21,6 +19,7 @@ const ProfileData = ({
   isHighlightsLoading,
   isPostsLoading,
   posts_count,
+  isPrivate,
 }) => {
   const { activeTab, setActiveTab } = useTabs();
 
@@ -96,6 +95,12 @@ const ProfileData = ({
               </h3>
             </div>
           )
+        ) : isPrivate ? (
+          <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10 p-3 border-2 border-white rounded-md">
+            <h3 className=" dark:text-white text-black">
+              The Account Is Private
+            </h3>
+          </div>
         ) : activeTab === "Profile" ? (
           posts?.length > 0 ? (
             <div className="w-screen flex flex-row flex-wrap justify-center self-center gap-10 h-auto">
@@ -105,7 +110,7 @@ const ProfileData = ({
             </div>
           ) : isPostsLoading ? (
             <PageLoader content={"Posts"} />
-          ) : posts_count > 0 && posts?.length <= 0 ? (
+          ) : isPrivate ? (
             <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10 p-3 border-2 border-white rounded-md">
               <h3 className=" dark:text-white text-black">
                 The Account Is Private
@@ -126,10 +131,18 @@ const ProfileData = ({
               highlights?.map((highlight, index) => (
                 <HighlightTray key={index} highlight={highlight} />
               ))
+            ) : isPrivate ? (
+              <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10 p-3 border-2 border-white rounded-md">
+                <h3 className=" dark:text-white text-black">
+                  The Account Is Private
+                </h3>
+              </div>
             ) : (
-              <h3 className=" dark:text-white text-black">
-                No Highlights Found For The User
-              </h3>
+              <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10">
+                <h3 className=" dark:text-white text-black">
+                  No Highlights Available
+                </h3>
+              </div>
             )}
           </div>
         )}
