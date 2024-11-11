@@ -8,7 +8,7 @@ const Comment = ({ comment }) => {
   async function getByassPassedImage(url) {
     // setImageLoading(true);
     const { data } = await axios.post(
-      `http://192.168.138.47:8081/highlight-cover/${encodeURIComponent(url)}`
+      `https://instagram-api-mhg3.onrender.com/highlight-cover/${encodeURIComponent(url)}`
     );
     if (data) {
       setImageUrl(data);

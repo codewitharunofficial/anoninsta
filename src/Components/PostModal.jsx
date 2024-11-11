@@ -17,7 +17,7 @@ const PostModal = ({ postId, onClose, url, postCode, mediaType }) => {
       try {
         setLoadingComments(true);
         const { data } = await axios.post(
-          `http://192.168.138.47:8081/post-comments/${postCode}`
+          `https://instagram-api-mhg3.onrender.com/post-comments/${postCode}`
         );
         if (data?.success) {
           console.log(data?.comments?.comments);

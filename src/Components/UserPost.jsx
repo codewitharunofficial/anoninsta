@@ -17,7 +17,7 @@ const UserPost = ({ post }) => {
 
   async function getByassPassedImage(url) {
     const { data } = await axios.post(
-      `http://192.168.138.47:8081/highlight-cover/${encodeURIComponent(url)}`
+      `https://instagram-api-mhg3.onrender.com/highlight-cover/${encodeURIComponent(url)}`
     );
     if (data) {
       setImageUrl(data);
@@ -33,7 +33,7 @@ const UserPost = ({ post }) => {
   const getBufferedVideo = async (url) => {
     try {
       const response = await fetch(
-        `http://192.168.138.47:8081/${
+        `https://instagram-api-mhg3.onrender.com/${
           post?.media_type === 2 ? "download-video" : "download-image"
         }/${encodeURIComponent(url)}/${post?.user?.username}`
       );
