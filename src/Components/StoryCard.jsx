@@ -7,6 +7,7 @@ import { AiFillPlayCircle } from "react-icons/ai";
 const StoryCard = ({ story }) => {
   const [storyImage, setStoryImage] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [videoUrl, setVideoUrl] = useState();
 
   const onClose = () => {
     setIsModalOpen(false);
@@ -14,7 +15,7 @@ const StoryCard = ({ story }) => {
 
   async function getByassPassedImage(url) {
     const { data } = await axios.post(
-      `https://instagram-api-mhg3.onrender.com/highlight-cover/${encodeURIComponent(url)}`
+      `http://192.168.138.47:8081/highlight-cover/${encodeURIComponent(url)}`
     );
     if (data) {
       setStoryImage(data);
@@ -26,6 +27,35 @@ const StoryCard = ({ story }) => {
       getByassPassedImage(story?.image_versions?.items[0]?.url);
     }
   }, [story, story?.image_versions?.items[0]?.url]);
+
+  const getBufferedVideo = async (url) => {
+    try {
+      const response = await fetch(
+        `http://192.168.138.47:8081/${
+          story?.media_type === 2 ? "download-video" : "download-image"
+        }/${encodeURIComponent(url)}/${story?.user?.username}`
+      );
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const downloadableUrl = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = downloadableUrl;
+        link.download = `${story?.user?.username}_story_${
+          story?.taken_at_date
+        }.${story?.media_type === 2 ? "mp4" : "jpg"}`;
+        document.body.appendChild(link);
+        link.click();
+
+        //clean up
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(downloadableUrl);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div
@@ -73,16 +103,18 @@ const StoryCard = ({ story }) => {
           {moment(story?.taken_at_date).fromNow()}
         </h4>
       </div>
-      <a
+      <button
+        onClick={() =>
+          getBufferedVideo(
+            story?.media_type === 2
+              ? story?.video_versions[0]?.url
+              : story?.image_versions?.items[0]?.url
+          )
+        }
         className="btn w-full bg-white text-black p-5 rounded-md text-center border-2 border-gray-400 font-bold"
-        target="_blank"
-        download={`${story?.user?.username}_story.${
-          story?.media_type === 2 ? "mp4" : "jpg"
-        }`}
-        href={story?.media_type === 2 ? story?.video_versions[0]?.url : storyImage}
       >
         Download
-      </a>
+      </button>
     </div>
   );
 };

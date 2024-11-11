@@ -7,7 +7,7 @@ const HighlightTray = ({ highlight }) => {
 
   async function getByassPassedImage(url) {
     const { data } = await axios.post(
-      `https://instagram-api-mhg3.onrender.com/highlight-cover/${encodeURIComponent(url)}`);
+      `http://192.168.138.47:8081/highlight-cover/${encodeURIComponent(url)}`);
     // console.log(data);
     setImageUrl(data);
   }

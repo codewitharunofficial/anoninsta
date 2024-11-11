@@ -1,4 +1,4 @@
-import React, {  } from "react";
+import React from "react";
 import Tabs from "./Tabs";
 import { useTabs } from "@/context/TabContext";
 import HighlightTray from "./HighlightTray";
@@ -87,6 +87,12 @@ const ProfileData = ({
             stories?.map((story, index) => (
               <StoryCard key={index} story={story} />
             ))
+          ) : isPrivate ? (
+            <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10 p-3 border-2 border-white rounded-md">
+              <h3 className=" dark:text-white text-black">
+                The Account Is Private
+              </h3>
+            </div>
           ) : (
             <div className="flex flex-row w-full overflow-scroll justify-center self-center items-center gap-10 p-3 border-2 border-white rounded-md">
               <h3 className=" dark:text-white text-black">
@@ -95,12 +101,6 @@ const ProfileData = ({
               </h3>
             </div>
           )
-        ) : isPrivate ? (
-          <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10 p-3 border-2 border-white rounded-md">
-            <h3 className=" dark:text-white text-black">
-              The Account Is Private
-            </h3>
-          </div>
         ) : activeTab === "Profile" ? (
           posts?.length > 0 ? (
             <div className="w-screen flex flex-row flex-wrap justify-center self-center gap-10 h-auto">

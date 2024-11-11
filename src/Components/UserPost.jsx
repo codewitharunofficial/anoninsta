@@ -4,11 +4,9 @@ import axios from "axios";
 import { AiFillLike, AiFillPlayCircle } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
 import PostModal from "./PostModal";
-import loading from "../app/Loading.gif"
 const UserPost = ({ post }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
-  const [imageLoading, setImageLoading] = useState(false);
 
   const openModal = () => {
     setModalOpen(true);
@@ -18,13 +16,11 @@ const UserPost = ({ post }) => {
   };
 
   async function getByassPassedImage(url) {
-    setImageLoading(true);
     const { data } = await axios.post(
-      `https://instagram-api-mhg3.onrender.com/highlight-cover/${encodeURIComponent(url)}`
+      `http://192.168.138.47:8081/highlight-cover/${encodeURIComponent(url)}`
     );
     if (data) {
       setImageUrl(data);
-      setImageLoading(false);
     }
   }
 
@@ -34,7 +30,34 @@ const UserPost = ({ post }) => {
     }
   }, [post]);
 
-  // console.log(post?.pk);
+  const getBufferedVideo = async (url) => {
+    try {
+      const response = await fetch(
+        `http://192.168.138.47:8081/${
+          post?.media_type === 2 ? "download-video" : "download-image"
+        }/${encodeURIComponent(url)}/${post?.user?.username}`
+      );
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const downloadableUrl = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = downloadableUrl;
+        link.download = `${post?.user?.username}_post_${post?.taken_at}.${
+          post?.media_type === 2 ? "mp4" : "jpg"
+        }`;
+        document.body.appendChild(link);
+        link.click();
+
+        //clean up
+        document.body.removeChild(link);
+        window.URL?.revokeObjectURL(downloadableUrl);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div
@@ -76,25 +99,25 @@ const UserPost = ({ post }) => {
           cursor: "pointer",
         }}
       />
-      <div className="flex w-full min-h-96 h-full flex-col bg-gray-500 items-center justify-center">
-        {
-          imageUrl ? (
-            <img
+      <div className="flex w-full min-h-96 h-full flex-col bg-gray-500 ">
+        <img
           onClick={() => {
             openModal();
           }}
           className=" max-h-96 min-h-96 cursor-pointer"
           src={imageUrl}
         />
-          ) : (
-          <img
-          className="place-self-center cursor-pointer"
-          src={loading?.src}
-          style={{width: 30, height: 30, mixBlendMode: "multiply"}}
-        />
-          )
-        }
         <div className="flex flex-col items-center gap-2  bg-white w-full p-5 rounded-b-md">
+          <button
+            onClick={() =>
+              getBufferedVideo(
+                post?.media_type === 2 ? post?.video_versions[0]?.url : post?.image_versions?.items[0]?.url
+              )
+            }
+            className="btn w-full bg-white text-black p-5 rounded-md text-center border-2 border-gray-400 font-bold hover:bg-purple-600"
+          >
+            Download
+          </button>
           <div className="flex flex-row items-center justify-between w-full ">
             <h4 className="text-start dark:text-black text-black ">
               {post?.caption?.text?.slice(0, 60)}...
