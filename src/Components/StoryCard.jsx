@@ -13,9 +13,15 @@ const StoryCard = ({ story }) => {
     setIsModalOpen(false);
   };
 
+  const isOpen = () => {
+    setIsModalOpen(true);
+  };
+
   async function getByassPassedImage(url) {
     const { data } = await axios.post(
-      `https://instagram-api-mhg3.onrender.com/highlight-cover/${encodeURIComponent(url)}`
+      `${process.env.NEXT_PUBLIC_API}/highlight-cover/${encodeURIComponent(
+        url
+      )}`
     );
     if (data) {
       setStoryImage(data);
@@ -23,15 +29,15 @@ const StoryCard = ({ story }) => {
   }
 
   useEffect(() => {
-    if (story?.image_versions?.items[0]?.url) {
+    if (story?.media_type !== 2) {
       getByassPassedImage(story?.image_versions?.items[0]?.url);
     }
-  }, [story, story?.image_versions?.items[0]?.url]);
+  }, [story?.media_type]);
 
   const getBufferedVideo = async (url) => {
     try {
       const response = await fetch(
-        `https://instagram-api-mhg3.onrender.com/${
+        `${process.env.NEXT_PUBLIC_API}/${
           story?.media_type === 2 ? "download-video" : "download-image"
         }/${encodeURIComponent(url)}/${story?.user?.username}`
       );
@@ -67,8 +73,12 @@ const StoryCard = ({ story }) => {
     >
       {isModalOpen && (
         <VideoModal
-          videoUrl={story?.video_versions[0]?.url}
+          url={
+            story?.media_type === 2 ? story?.video_versions[0]?.url : storyImage
+          }
           onClose={onClose}
+          mediaType={story?.media_type}
+          isOpen={isOpen}
         />
       )}
       <AiFillPlayCircle
@@ -87,7 +97,7 @@ const StoryCard = ({ story }) => {
           height: "50px",
           background: "rgba(0, 0, 0, 0.6)",
           borderRadius: "50%",
-          display: "flex",
+          display: story?.media_type === 2 ? "flex" : "none",
           alignItems: "center",
           justifyContent: "center",
           color: "#fff",
@@ -95,7 +105,18 @@ const StoryCard = ({ story }) => {
         }}
       />
       <div className="flex flex-col gap-3">
-        <img className="w-md-1/2 w-sm-full h-full" src={storyImage} />
+        {story?.media_type === 2 ? (
+          <video
+            className="w-md-1/2 w-sm-full h-full"
+            src={story?.video_versions[0]?.url}
+          />
+        ) : (
+          <img
+            onClick={() => setIsModalOpen(true)}
+            className="w-md-1/2 w-sm-full h-full"
+            src={storyImage}
+          />
+        )}
         <h4
           style={{ transform: "translate(-50%, -100%)" }}
           className="text-center dark:text-white text-white bg-transparent absolute bottom-20 left-1/2 text-xl"

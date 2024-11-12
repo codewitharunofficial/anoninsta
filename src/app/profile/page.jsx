@@ -18,7 +18,7 @@ const Profile = () => {
     setIsHighlightsLoading(true);
     try {
       const { data } = await axios.post(
-        `https://instagram-api-mhg3.onrender.com/highlights/${user?.user?.id}`
+        `${process.env.NEXT_PUBLIC_API}/highlights/${user?.user?.id}`
       );
 
       if (data?.success) {
@@ -35,7 +35,7 @@ const Profile = () => {
     setIsPostsLoading(true);
     try {
       const { data } = await axios.post(
-        `https://instagram-api-mhg3.onrender.com/posts/${user?.user?.id}`
+        `${process.env.NEXT_PUBLIC_API}/posts/${user?.user?.id}`
       );
       
       if (data.success) {

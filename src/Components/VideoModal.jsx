@@ -1,6 +1,8 @@
+import Image from "next/image";
 import React from "react";
 
-const VideoModal = ({ onClose, videoUrl }) => {
+const VideoModal = ({ onClose, url, mediaType, }) => {
+        // console.log(url);
   return (
     <div style={styles.overlay}>
       <div
@@ -15,12 +17,11 @@ const VideoModal = ({ onClose, videoUrl }) => {
         >
           ✖
         </button>
-        <video
-          className={"h-4/5"}
-          controls
-          style={styles.video}
-          src={videoUrl}
-        />
+        {mediaType === 2 ? (
+          <video className={"h-4/5"} controls style={styles.video} src={url} />
+        ) : (
+          <img className={"h-4/5"} style={styles.image} src={url} />
+        )}
       </div>
     </div>
   );

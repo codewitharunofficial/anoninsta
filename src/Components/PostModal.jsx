@@ -4,7 +4,7 @@ import Comment from "./Comment";
 import { useUser } from "@/context/UserConext";
 
 const PostModal = ({ postId, onClose, url, postCode, mediaType }) => {
-  console.log(postId);
+  // console.log("Post ID: ", postId);
 
   const [isShowingComments, setIsShowingComments] = useState(false);
   const [loadingComments, setLoadingComments] = useState(false);
@@ -17,11 +17,11 @@ const PostModal = ({ postId, onClose, url, postCode, mediaType }) => {
       try {
         setLoadingComments(true);
         const { data } = await axios.post(
-          `https://instagram-api-mhg3.onrender.com/post-comments/${postCode}`
+          `${process.env.NEXT_PUBLIC_API}/post-comments/${postId}`
         );
         if (data?.success) {
-          console.log(data?.comments?.comments);
-          setUser({ ...user, comments: data?.comments?.comments });
+          console.log(data?.comments);
+          setUser({ ...user, comments: data?.comments?.items });
           setLoadingComments(false);
         }
       } catch (error) {
