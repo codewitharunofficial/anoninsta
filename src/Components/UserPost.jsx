@@ -4,6 +4,7 @@ import axios from "axios";
 import { AiFillLike, AiFillPlayCircle } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
 import PostModal from "./PostModal";
+import { DateFormatter } from "proper-datesjs";
 const UserPost = ({ post }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
@@ -61,9 +62,10 @@ const UserPost = ({ post }) => {
     }
   };
 
+
   return (
     <div
-      className=" flex flex-row w-4/5 md:w-96 sm:w-4/5 h-2/5 flex-wrap items-center gap-10 p-2  bg-gray-500 justify-center self-center relative"
+      className=" flex flex-row w-7/8 md:w-96 h-2/5 md:h-2/5 flex-wrap items-center gap-10 p-2  bg-gray-500 justify-center self-center relative"
       style={{
         border: "1px solid white",
         borderRadius: 10,
@@ -108,7 +110,7 @@ const UserPost = ({ post }) => {
             onClick={() => {
               openModal();
             }}
-            className=" w-full max-h-96 min-h-96 cursor-pointer"
+            className="max-h-96 min-h-96 cursor-pointer"
             src={post?.video_versions[0]?.url}
           />
         ) : (
@@ -129,7 +131,7 @@ const UserPost = ({ post }) => {
                   : post?.image_versions?.items[0]?.url
               )
             }
-            className="btn w-full bg-white text-black p-5 rounded-md text-center border-2 border-gray-400 font-bold hover:bg-purple-600"
+            className="btn w-full min-w-7/8 bg-white text-black p-5 rounded-md text-center border-2 border-gray-400 font-bold hover:bg-purple-600"
           >
             Download
           </button>
@@ -142,9 +144,15 @@ const UserPost = ({ post }) => {
             <h4 className="text-start dark:text-black text-black ">
               <AiFillLike /> {post?.like_count}
             </h4>
-            <p className="text-start dark:text-black text-black text-sm">
+            <p className="text-start dark:text-black text-black">
               <FaComment /> {post?.comment_count}
             </p>
+            <span className="flex self-end">
+              <p className="dark:text-orange-600 text-orange-600 text-sm" >
+              {DateFormatter.toLongDate(post?.taken_at)}
+              </p>
+                
+            </span>
           </div>
         </div>
       </div>

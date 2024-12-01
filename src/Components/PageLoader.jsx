@@ -3,7 +3,7 @@ import React from 'react'
 const PageLoader = ({content}) => {
   return (
 
-<div className='self-center items-center'>
+<div className='self-center items-center h-auto'>
   <h2 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Converting your image:</h2>
   <ul className="max-w-md space-y-2 text-gray-500 list-inside dark:text-gray-400">
     <li className="flex items-center">

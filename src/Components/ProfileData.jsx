@@ -126,7 +126,7 @@ const ProfileData = ({
         ) : isHighlightsLoading ? (
           <PageLoader content={"Highlights..."} />
         ) : (
-          <div className="flex flex-row w-full overflow-scroll self-center items-center gap-10 p-3 border-2 border-white rounded-md">
+          <div className="flex flex-row w-full overflow-scroll self-center items-center gap-10 p-3 ">
             {highlights?.length > 0 ? (
               highlights?.map((highlight, index) => (
                 <HighlightTray key={index} highlight={highlight} />

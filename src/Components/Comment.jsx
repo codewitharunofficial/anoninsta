@@ -1,6 +1,6 @@
 import axios from "axios";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
+import { DateFormatter } from "proper-datesjs";
 
 const Comment = ({ comment }) => {
   const [imageUrl, setImageUrl] = useState();
@@ -8,7 +8,9 @@ const Comment = ({ comment }) => {
   async function getByassPassedImage(url) {
     // setImageLoading(true);
     const { data } = await axios.post(
-      `${process.env.NEXT_PUBLIC_API}/highlight-cover/${encodeURIComponent(url)}`
+      `${process.env.NEXT_PUBLIC_API}/highlight-cover/${encodeURIComponent(
+        url
+      )}`
     );
     if (data) {
       setImageUrl(data);
@@ -23,7 +25,10 @@ const Comment = ({ comment }) => {
   }, [comment, comment?.user?.profile_pic_url]);
 
   return (
-    <div className="w-full flex flex-col gap-2 " style={{borderBottom: "0.5px solid gray"}} >
+    <div
+      className="w-full flex flex-col gap-2 "
+      style={{ borderBottom: "0.5px solid gray" }}
+    >
       <div className="flex w-1/2 flex-row gap-2 ">
         <img
           src={imageUrl}
@@ -32,8 +37,15 @@ const Comment = ({ comment }) => {
         />
         <h3 className="text-blue-500 text-md font-bold underline underline-offset-2">{`${comment?.user?.username}`}</h3>
       </div>
-      <h4 className="text-black text-sm font-semibold ml-10" >{comment?.text}</h4>
-      <p className="text-gray-700 text-xs text-end" >{moment(comment?.created_at).toDate().toLocaleDateString()}</p>
+      <h4 className="text-black text-sm font-semibold ml-10">
+        {comment?.text}
+      </h4>
+      <p className="text-gray-700 text-xs text-end">
+        {DateFormatter.parseDate(
+          comment?.created_at,
+          "DD-MM-YYYY"
+        )}
+      </p>
     </div>
   );
 };
@@ -41,5 +53,5 @@ const Comment = ({ comment }) => {
 export default Comment;
 
 const className = {
-  userName: ""
-}
+  userName: "",
+};
