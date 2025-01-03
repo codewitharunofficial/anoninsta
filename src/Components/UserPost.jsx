@@ -65,7 +65,7 @@ const UserPost = ({ post }) => {
 
   return (
     <div
-      className=" flex flex-row w-7/8 md:w-96 h-2/5 md:h-2/5 flex-wrap items-center gap-10 p-2  bg-gray-500 justify-center self-center relative"
+      className=" flex flex-row w-7/8 md:w-96 h-2/5 md:h-2/5 flex-wrap items-center gap-10  bg-gray-500 justify-center self-center relative"
       style={{
         border: "1px solid white",
         borderRadius: 10,
@@ -81,24 +81,25 @@ const UserPost = ({ post }) => {
         />
       )}
 
-      <div className="flex w-full min-h-96 h-full flex-col bg-gray-500 relative">
+      <div className="flex w-96 min-h-96 h-full flex-col m-1 bg-gray-500 relative">
         <AiFillPlayCircle
           onClick={() => {
             openModal();
+            
           }}
           className="hover:bg-black"
-          color="white"
-          size={100}
+          color="green"
+          size={150}
           style={{
             position: "absolute",
-            top: "50%",
+            top: "35%",
             left: "50%",
             transform: "translate(-70%, -100%)",
             width: "50px",
             height: "50px",
             background: "rgba(0, 0, 0, 0.6)",
             borderRadius: "50%",
-            display: post?.media_type === 2 && imageUrl ? "flex" : "none",
+            display: post?.media_type === 2 ? "flex" : "none",
             alignItems: "center",
             justifyContent: "center",
             color: "#fff",
@@ -109,8 +110,9 @@ const UserPost = ({ post }) => {
           <video
             onClick={() => {
               openModal();
+              console.log(post?.media_type)
             }}
-            className="max-h-96 min-h-96 cursor-pointer"
+            className="max-h-96 min-h-96 w-auto cursor-pointer"
             src={post?.video_versions[0]?.url}
           />
         ) : (
@@ -118,7 +120,7 @@ const UserPost = ({ post }) => {
             onClick={() => {
               openModal();
             }}
-            className=" max-h-96 min-h-96 cursor-pointer"
+            className=" max-h-96 min-h-96 w-auto cursor-pointer"
             src={imageUrl}
           />
         )}

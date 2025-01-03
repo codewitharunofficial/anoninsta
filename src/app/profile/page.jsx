@@ -40,6 +40,7 @@ const Profile = () => {
       
       if (data.success) {
         setUser({ ...user, posts: data?.posts?.items });
+        console.log(data?.posts);
         setIsPostsLoading(false);
       }
     } catch (error) {

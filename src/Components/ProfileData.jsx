@@ -38,6 +38,7 @@ const ProfileData = ({
     }
   }
 
+
   return (
     <div className="flex flex-col w-screen items-center justify-center self-center gap-5 p-10">
       <div
