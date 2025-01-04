@@ -4,7 +4,6 @@ import axios from "axios";
 import { AiFillLike, AiFillPlayCircle } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
 import PostModal from "./PostModal";
-import { DateFormatter } from "proper-datesjs";
 const UserPost = ({ post }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
@@ -151,7 +150,7 @@ const UserPost = ({ post }) => {
             </p>
             <span className="flex self-end">
               <p className="dark:text-orange-600 text-orange-600 text-sm" >
-              {DateFormatter.toLongDate(post?.taken_at)}
+              {moment(post?.taken_at * 1000).format('DD/MM/YYYY')}
               </p>
                 
             </span>

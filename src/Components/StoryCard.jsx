@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import VideoModal from "./VideoModal";
 import { AiFillPlayCircle } from "react-icons/ai";
-import { DateFormatter } from "proper-datesjs";
+import moment from "moment";
 
 const StoryCard = ({ story }) => {
   const [storyImage, setStoryImage] = useState();
@@ -122,7 +122,7 @@ const StoryCard = ({ story }) => {
           style={{ transform: "translate(-50%, -100%)" }}
           className="text-center dark:text-white text-white bg-transparent absolute bottom-20 left-1/2 text-xl"
         >
-          {DateFormatter.fromNow(story?.taken_at)}
+          {moment(story?.taken_at).fromNow()}
         </h4>
       </div>
       <button

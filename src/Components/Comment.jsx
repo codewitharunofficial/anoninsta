@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { DateFormatter } from "proper-datesjs";
+import moment from "moment";
 
 const Comment = ({ comment }) => {
   const [imageUrl, setImageUrl] = useState();
@@ -41,10 +41,7 @@ const Comment = ({ comment }) => {
         {comment?.text}
       </h4>
       <p className="text-gray-700 text-xs text-end">
-        {DateFormatter.parseDate(
-          comment?.created_at,
-          "DD-MM-YYYY"
-        )}
+        {moment(comment?.created_at * 1000).format("DD-MM-YYYY")}
       </p>
     </div>
   );

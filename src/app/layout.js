@@ -47,6 +47,11 @@ export default function RootLayout({ children }) {
             <TabsProvider>{children}</TabsProvider>
           </UserProvider>
         </main>
+        <footer className="w-full h-32 bg-white p-5 flex flex-col sm:flex-row md:flex-row gap-5 sm:justify-between sm:px-24">
+            <h4 className="text-black">Contact</h4>
+            <h4 className="text-black">Report An Issue</h4>
+            <h4 className="text-black">About Us</h4>
+        </footer>
       </body>
     </html>
   );
