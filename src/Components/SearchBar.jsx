@@ -21,23 +21,36 @@ const SearchBar = ({ route, setRoute, setIsUSer }) => {
           setIsUSer(false);
           setLoading(false);
         } else {
-        if (!data?.user?.isPrivate) {
-          const stories = await axios.post(
-            `${process.env.NEXT_PUBLIC_API}/stories/${userName}`
-          );
-
-          if (stories.data.success) {
-            setUser({
-              user: data?.user,
-              user_name: userName,
-              full_name: data?.user?.full_name,
-              stories: stories.data?.stories,
-              posts: [],
-              highlights: [],
-              comments: [],
-            });
-            setLoading(false);
-            setRoute(true);
+          if (!data?.user?.isPrivate) {
+            const stories = await axios.post(
+              `${process.env.NEXT_PUBLIC_API}/stories/${userName}`
+            );
+  
+            if (stories.data.success) {
+              setUser({
+                user: data?.user,
+                user_name: userName,
+                full_name: data?.user?.full_name,
+                stories: stories.data?.stories,
+                posts: [],
+                highlights: [],
+                comments: [],
+              });
+              setLoading(false);
+              setRoute(true);
+            } else {
+              setUser({
+                user: data?.user,
+                user_name: userName,
+                full_name: data?.user?.full_name,
+                stories: [],
+                posts: [],
+                highlights: [],
+                comments: [],
+              });
+              setLoading(false);
+              setRoute(true);
+            }
           } else {
             setUser({
               user: data?.user,
@@ -51,18 +64,6 @@ const SearchBar = ({ route, setRoute, setIsUSer }) => {
             setLoading(false);
             setRoute(true);
           }
-        } else {
-          setUser({
-            user: data?.user,
-            user_name: userName,
-            full_name: data?.user?.full_name,
-            stories: [],
-            posts: [],
-            highlights: [],
-            comments: [],
-          });
-          setLoading(false);
-          setRoute(true);
         }
       }
     } catch (error) {
