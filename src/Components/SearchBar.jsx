@@ -4,7 +4,7 @@ import axios from "axios";
 import { useUser } from "@/context/UserConext";
 import Loader from "./Loader";
 
-const SearchBar = ({ route, setRoute, setIsUser }) => {
+const SearchBar = ({ route, setRoute, setIsUSer }) => {
   const [userName, setUserName] = useState("");
   const { user, setUser } = useUser();
   const [loading, setLoading] = useState();
@@ -13,40 +13,27 @@ const SearchBar = ({ route, setRoute, setIsUser }) => {
     e?.preventDefault();
     try {
       setLoading(true);
-      const { data } = await axios.post(`/api/user/${userName}`);
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_API}/user/${userName}`
+      );
       if (data?.success) {
-        if (data?.status === 201) {
-          setIsUser(false);
-          setLoading(false);
-        } else {
-          if (!data?.user?.isPrivate) {
-            const stories = await axios.post(`/api/stories/${userName}`);
+        if (!data?.user?.isPrivate) {
+          const stories = await axios.post(
+            `${process.env.NEXT_PUBLIC_API}/stories/${userName}`
+          );
 
-            if (stories.data.success) {
-              setUser({
-                user: data?.user,
-                user_name: userName,
-                full_name: data?.user?.full_name,
-                stories: stories.data?.stories,
-                posts: [],
-                highlights: [],
-                comments: [],
-              });
-              setLoading(false);
-              setRoute(true);
-            } else {
-              setUser({
-                user: data?.user,
-                user_name: userName,
-                full_name: data?.user?.full_name,
-                stories: [],
-                posts: [],
-                highlights: [],
-                comments: [],
-              });
-              setLoading(false);
-              setRoute(true);
-            }
+          if (stories.data.success) {
+            setUser({
+              user: data?.user,
+              user_name: userName,
+              full_name: data?.user?.full_name,
+              stories: stories.data?.stories,
+              posts: [],
+              highlights: [],
+              comments: [],
+            });
+            setLoading(false);
+            setRoute(true);
           } else {
             setUser({
               user: data?.user,
@@ -60,6 +47,18 @@ const SearchBar = ({ route, setRoute, setIsUser }) => {
             setLoading(false);
             setRoute(true);
           }
+        } else {
+          setUser({
+            user: data?.user,
+            user_name: userName,
+            full_name: data?.user?.full_name,
+            stories: [],
+            posts: [],
+            highlights: [],
+            comments: [],
+          });
+          setLoading(false);
+          setRoute(true);
         }
       }
     } catch (error) {
