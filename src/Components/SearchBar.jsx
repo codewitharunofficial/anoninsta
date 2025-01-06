@@ -17,6 +17,10 @@ const SearchBar = ({ route, setRoute, setIsUSer }) => {
         `${process.env.NEXT_PUBLIC_API}/user/${userName}`
       );
       if (data?.success) {
+        if(data?.status === 201){
+          setIsUSer(false);
+          setLoading(false);
+        } else {
         if (!data?.user?.isPrivate) {
           const stories = await axios.post(
             `${process.env.NEXT_PUBLIC_API}/stories/${userName}`
