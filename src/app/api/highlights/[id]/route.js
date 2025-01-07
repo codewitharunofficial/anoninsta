@@ -22,7 +22,7 @@ export async function POST(req, { params }) {
         },
         headers: {
           "x-rapidapi-key":
-            "b1c26628e0msh3fbbf13ea24b4abp184561jsna2ebae86e910",
+            process.env.SCRAPPER_API_KEY,
           "x-rapidapi-host":
             "instagram-scrapper-posts-reels-stories-downloader.p.rapidapi.com",
         },

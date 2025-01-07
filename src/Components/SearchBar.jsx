@@ -4,7 +4,7 @@ import axios from "axios";
 import { useUser } from "@/context/UserConext";
 import Loader from "./Loader";
 
-const SearchBar = ({ route, setRoute, setIsUSer }) => {
+const SearchBar = ({ route, setRoute, setIsUser }) => {
   const [userName, setUserName] = useState("");
   const { user, setUser } = useUser();
   const [loading, setLoading] = useState();
@@ -14,16 +14,16 @@ const SearchBar = ({ route, setRoute, setIsUSer }) => {
     try {
       setLoading(true);
       const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API}/user/${userName}`
+        `/api/user/${userName}`
       );
       if (data?.success) {
         if(data?.status === 201){
-          setIsUSer(false);
+          setIsUser(false);
           setLoading(false);
         } else {
           if (!data?.user?.isPrivate) {
             const stories = await axios.post(
-              `${process.env.NEXT_PUBLIC_API}/stories/${userName}`
+              `/api/stories/${userName}`
             );
   
             if (stories.data.success) {

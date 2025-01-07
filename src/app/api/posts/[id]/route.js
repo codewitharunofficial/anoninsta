@@ -10,7 +10,7 @@ export async function POST(req, { params }) {
         username_or_id_or_url: id,
       },
       headers: {
-        "x-rapidapi-key": "b1c26628e0msh3fbbf13ea24b4abp184561jsna2ebae86e910",
+        "x-rapidapi-key": process.env.SCRAPPER_API_KEY,
         "x-rapidapi-host": "instagram-scraper-api2.p.rapidapi.com",
       },
     };

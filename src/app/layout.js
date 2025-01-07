@@ -4,6 +4,7 @@ import Header from "@/Components/Header";
 import { UserProvider } from "@/context/UserConext";
 import { TabsProvider } from "@/context/TabContext";
 import logo from "./logo.webp";
+import Link from "next/link";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,7 +31,7 @@ export default function RootLayout({ children }) {
       >
         <Header />
         <main
-          className="flex-1 w-screen items-center overflow-auto scroll-pb-4"
+          className="h-screen sm:flex-1 md:flex-1 w-screen items-center overflow-auto scroll-pb-4"
           style={{
             paddingTop: "20%",
             background:
@@ -48,10 +49,34 @@ export default function RootLayout({ children }) {
           </UserProvider>
         </main>
         <footer className="w-full h-40 sm:h-24 bg-white p-3 flex flex-col sm:flex-row md:flex-row gap-3 sm:justify-around sm:px-24 items-center">
-          <h4 className="text-black">Contact</h4>
-          <h4 className="text-black">Report An Issue</h4>
-          <h4 className="text-black">About Us</h4>
-          <h3 className="text-black" >© 2025 codewitharun</h3>
+          <Link
+            href={"/contact"}
+            className="text-black hover:underline underline-offset-2"
+          >
+            Contact
+          </Link>
+          <a
+            href={
+              "https://github.com/codewitharunofficial/anoninsta/issues/new"
+            }
+            className="text-black hover:underline underline-offset-2"
+            target="_blank"
+          >
+            Report An Issue
+          </a>
+          <Link
+            href={"/about"}
+            className="text-black hover:underline underline-offset-2"
+          >
+            About Us
+          </Link>
+          <a
+            className="text-black"
+            target="_blank"
+            href={"https://linkedin.com/in/ravi5320"}
+          >
+            © 2025 (Ravi)
+          </a>
         </footer>
       </body>
     </html>
