@@ -22,6 +22,7 @@ const Profile = () => {
       );
 
       if (data?.success) {
+        console.log(data.highlights);
         setUser({ ...user, highlights: data?.highlights });
         setIsHighlightsLoading(false);
       }

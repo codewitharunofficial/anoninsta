@@ -19,9 +19,7 @@ const StoryCard = ({ story }) => {
 
   async function getByassPassedImage(url) {
     const { data } = await axios.post(
-      `/api/highlight-cover/${encodeURIComponent(
-        url
-      )}`
+      `/api/highlight-cover/${encodeURIComponent(url)}`
     );
     if (data) {
       setStoryImage(data);
@@ -30,7 +28,10 @@ const StoryCard = ({ story }) => {
 
   useEffect(() => {
     if (story?.media_type !== 2) {
-      getByassPassedImage(story?.image_versions?.items[0]?.url);
+      getByassPassedImage(
+        story?.image_versions?.items[0]?.url ||
+          story?.image_versions2?.items[0]?.url
+      );
     }
   }, [story?.media_type]);
 

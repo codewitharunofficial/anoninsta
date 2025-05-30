@@ -5,6 +5,7 @@ import HighlightTray from "./HighlightTray";
 import PageLoader from "./PageLoader";
 import UserPost from "./UserPost";
 import StoryCard from "./StoryCard";
+import { useHighlight } from "@/context/Highlights";
 
 const ProfileData = ({
   fullName,
@@ -22,6 +23,9 @@ const ProfileData = ({
   isPrivate,
 }) => {
   const { activeTab, setActiveTab } = useTabs();
+  const { media } = useHighlight();
+
+  // console.log("Stories From Highlight: ", media);
 
   function formatCounts(count) {
     if (count > 999) {
@@ -37,7 +41,6 @@ const ProfileData = ({
       return count;
     }
   }
-
 
   return (
     <div className="flex flex-col w-screen items-center justify-center self-center gap-5 p-10">
@@ -78,7 +81,7 @@ const ProfileData = ({
               </h4>
             </span>
           </div>
-          <h5 className="text-black">{bio}</h5>
+          <h5 className="text-black text-center">{bio}</h5>
         </div>
       </div>
       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -127,24 +130,33 @@ const ProfileData = ({
         ) : isHighlightsLoading ? (
           <PageLoader content={"Highlights..."} />
         ) : (
-          <div className="flex flex-row w-full overflow-scroll self-center items-center gap-10 p-3 ">
-            {highlights?.length > 0 ? (
-              highlights?.map((highlight, index) => (
-                <HighlightTray key={index} highlight={highlight} />
-              ))
-            ) : isPrivate ? (
-              <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10 p-3 border-2 border-white rounded-md">
-                <h3 className=" dark:text-white text-black">
-                  The Account Is Private
-                </h3>
-              </div>
-            ) : (
-              <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10">
-                <h3 className=" dark:text-white text-black">
-                  No Highlights Available
-                </h3>
-              </div>
+          <div className="flex flex-col w-full overflow-scroll self-center items-center gap-10 p-3 ">
+            {!isPrivate && highlights?.length > 0 && (
+              <h3>Tap A Highlight Collection To Watch Media</h3>
             )}
+            <div
+              className={`flex flex-row w-full overflow-scroll self-center items-center gap-10 p-3`}
+            >
+              {highlights?.length > 0 ? (
+                highlights?.map((highlight, index) => (
+                  <HighlightTray key={index} highlight={highlight} />
+                ))
+              ) : isPrivate ? (
+                <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10 p-3 border-2 border-white rounded-md">
+                  <h3 className=" dark:text-white text-black">
+                    The Account Is Private
+                  </h3>
+                </div>
+              ) : (
+                <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10">
+                  <h3 className=" dark:text-white text-black">
+                    No Highlights Available
+                  </h3>
+                </div>
+              )}
+            </div>
+            {media.length > 0 &&
+              media.map((med, index) => <StoryCard key={index} story={med} />)}
           </div>
         )}
       </div>
