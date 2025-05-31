@@ -11,7 +11,7 @@ const About = () => {
           About Insecview
         </h1>
         <p className='text-white mt-2'>
-          <strong>Insecview</strong> is a simple and powerful tool that allows you to view public Instagram profiles, stories, highlights, and more—just by entering a username. Whether you're curious about someone's recent updates or just want to browse publicly available content anonymously, Insecview offers a fast and seamless experience.
+          <strong>Insecview</strong> is a simple and powerful tool that allows you to view public Instagram profiles, stories, highlights, and more—just by entering a username. Whether you&apos;re curious about someone&apos;s recent updates or just want to browse publicly available content anonymously, Insecview offers a fast and seamless experience.
         </p>
 
         <h2 className='text-white font-bold font-serif text-xl underline underline-offset-2 mt-6'>
