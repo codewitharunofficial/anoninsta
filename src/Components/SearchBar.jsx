@@ -13,19 +13,15 @@ const SearchBar = ({ route, setRoute, setIsUser }) => {
     e?.preventDefault();
     try {
       setLoading(true);
-      const { data } = await axios.post(
-        `/api/user/${userName}`
-      );
+      const { data } = await axios.post(`/api/user/${userName}`);
       if (data?.success) {
-        if(data?.status === 201){
+        if (data?.status === 201) {
           setIsUser(false);
           setLoading(false);
         } else {
           if (!data?.user?.isPrivate) {
-            const stories = await axios.post(
-              `/api/stories/${userName}`
-            );
-  
+            const stories = await axios.post(`/api/stories/${userName}`);
+
             if (stories.data.success) {
               setUser({
                 user: data?.user,
@@ -112,7 +108,10 @@ const SearchBar = ({ route, setRoute, setIsUser }) => {
         {!loading ? (
           <button
             type="submit"
-            className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            disabled={loading}
+            className={`text-white absolute end-2.5 bottom-2.5 bg-${
+              user?.user ? "green" : "blue"
+            }-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
           >
             {route ? "Redirecting..." : "Search"}
           </button>

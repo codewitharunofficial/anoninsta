@@ -4,9 +4,8 @@ import StoryCard from "./StoryCard";
 import { useHighlight } from "@/context/Highlights";
 
 const HighlightTray = ({ highlight }) => {
-
   const [imageUrl, setImageUrl] = useState();
-  const { setMedia} = useHighlight();
+  const { setMedia, setIsMediaLoading } = useHighlight();
 
   async function getByassPassedImage(url) {
     const { data } = await axios.post(
@@ -25,11 +24,14 @@ const HighlightTray = ({ highlight }) => {
   const loadHighlight = async (id) => {
     // console.log("Highlight ID: ", id);
     try {
+      setIsMediaLoading(true);
       const { data } = await axios.post(`/api/highlight-stories/${id}`);
       setMedia(data.highlights[id].items);
+      setIsMediaLoading(false);
       // console.log("Stories From Highlight: ", data.highlights[id].items);
     } catch (error) {
       console.log(error);
+      setIsMediaLoading(false);
     }
   };
 

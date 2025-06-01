@@ -23,7 +23,7 @@ const ProfileData = ({
   isPrivate,
 }) => {
   const { activeTab, setActiveTab } = useTabs();
-  const { media } = useHighlight();
+  const { media, isMediaLoading } = useHighlight();
 
   // console.log("Stories From Highlight: ", media);
 
@@ -130,7 +130,7 @@ const ProfileData = ({
         ) : isHighlightsLoading ? (
           <PageLoader content={"Highlights..."} />
         ) : (
-          <div className="flex flex-col w-full overflow-scroll self-center items-center gap-10 p-3 ">
+          <div className="flex flex-col sm-flex-row w-full overflow-scroll self-center items-center gap-10 p-3 ">
             {!isPrivate && highlights?.length > 0 && (
               <h3>Tap A Highlight Collection To Watch Media</h3>
             )}
@@ -155,8 +155,16 @@ const ProfileData = ({
                 </div>
               )}
             </div>
-            {media.length > 0 &&
-              media.map((med, index) => <StoryCard key={index} story={med} />)}
+            {media.length > 0 ? (
+              <div className="w-screen flex flex-row flex-wrap self-center items-center justify-center gap-10 h-auto p-5 ">
+                {media.map((med, index) => (
+                  <StoryCard key={index} story={med} />
+                ))}
+              </div>
+            ) : (
+              media.length === 0 &&
+              isMediaLoading && <PageLoader content={"Highlight Media"} />
+            )}
           </div>
         )}
       </div>

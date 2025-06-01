@@ -3,12 +3,13 @@ const { createContext, useState, useContext } = require("react");
 
 const Highlight = createContext();
 
-export const HighlightsProvider = ({children}) => {
+export const HighlightsProvider = ({ children }) => {
     const [media, setMedia] = useState([]);
+    const [isMediaLoading, setIsMediaLoading] = useState(false);
 
     return (
-        <Highlight.Provider value={{media, setMedia}} >
-           {children}
+        <Highlight.Provider value={{ media, setMedia, isMediaLoading, setIsMediaLoading }} >
+            {children}
         </Highlight.Provider>
     );
 }
