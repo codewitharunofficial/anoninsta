@@ -25,4 +25,11 @@ export const FooterItems = [
         target: "_blank",
         type: "external"
     },
+    {
+        id: 4,
+        href: "/learn/how-to-view-instagram-profiles-anonymously",
+        title: "Learn",
+        target: "",
+        type: "internal"
+    },
 ]

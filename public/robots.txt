@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://insecview.vercel.app
+
+# Sitemaps
+Sitemap: https://insecview.vercel.app/sitemap.xml

@@ -3,7 +3,6 @@ import "./globals.css";
 import Header from "@/Components/Header";
 import { UserProvider } from "@/context/UserConext";
 import { TabsProvider } from "@/context/TabContext";
-import logo from "./logo.webp";
 import { HighlightsProvider } from "@/context/Highlights";
 import Footer from "@/Components/Footer";
 
@@ -19,10 +18,47 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "An Anonymous Instagram Profile Viewer",
+  title: "Instagram Profile Viewer | InsecView",
   description:
-    "It's an Anonymous Instagram Story Viewer App where user can watch instgram stories of any public user with letting knowing them by searching the username on the app",
+    "View Instagram stories and profiles anonymously using InsecView. No login required. Fast, secure and private.",
+  keywords: [
+    "Instagram viewer",
+    "anonymous instagram viewer",
+    "insta story viewer",
+    "view instagram profiles",
+    "public instagram viewer",
+    "insecview",
+    "iganony",
+    "anonyig"
+  ],
+  robots: "index, follow",
+  metadataBase: new URL("https://insecview.vercel.app"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "InsecView - Anonymous Instagram Profile Viewer",
+    description: "View Instagram stories and profiles anonymously.",
+    url: "https://insecview.vercel.app",
+    siteName: "InsecView",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "InsecView Preview Image",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "InsecView",
+    description: "View Instagram stories and profiles anonymously.",
+    images: ["/og-image.jpg"],
+  },
 };
+
 
 export default function RootLayout({ children }) {
   return (
@@ -42,10 +78,10 @@ export default function RootLayout({ children }) {
           <HighlightsProvider>
             <UserProvider>
               <div className="flex flex-col md:flex-row gap-1 w-full items-center justify-center mb-3 md:mb-10">
-                <img src={logo?.src} className="w-20 h-20 md:h-20 rounded-xl" />
-                <h3 className="text-center md:text-3xl text-xl m-5 text-white font-bold underline underline-offset-4">
-                  Anonymous Instagram Viewer
-                </h3>
+                <img src="og-image.jpg" className="w-20 h-20 md:h-20 rounded-xl" alt="Insecview logo" />
+                <h1 className="text-center md:text-3xl text-xl m-5 text-white font-bold underline underline-offset-4">
+                  Anonymous Instagram Profile Viewer
+                </h1>
               </div>
               <TabsProvider>{children}</TabsProvider>
             </UserProvider>
