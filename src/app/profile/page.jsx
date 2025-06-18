@@ -1,7 +1,7 @@
 "use client";
-import ProfileData from "@/Components/ProfileData";
-import { useTabs } from "@/context/TabContext";
-import { useUser } from "@/context/UserConext";
+import ProfileData from "../../Components/ProfileData";
+import { useTabs } from "../../context/TabContext";
+import { useUser } from "../../context/UserConext";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -17,9 +17,7 @@ const Profile = () => {
   async function getHighlights() {
     setIsHighlightsLoading(true);
     try {
-      const { data } = await axios.post(
-        `/api/highlights/${user?.user?.id}`
-      );
+      const { data } = await axios.post(`/api/highlights/${user?.user?.id}`);
 
       if (data?.success) {
         console.log(data.highlights);
@@ -35,10 +33,8 @@ const Profile = () => {
   async function getPosts() {
     setIsPostsLoading(true);
     try {
-      const { data } = await axios.post(
-        `/api/posts/${user?.user?.id}`
-      );
-      
+      const { data } = await axios.post(`/api/posts/${user?.user?.id}`);
+
       if (data.success) {
         setUser({ ...user, posts: data?.posts?.items });
         console.log(data?.posts);

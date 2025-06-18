@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import Comment from "./Comment";
-import { useUser } from "@/context/UserConext";
+import { useUser } from "../context/UserConext";
 
 const PostModal = ({ postId, onClose, url, postCode, mediaType }) => {
   // console.log("Post ID: ", postId);

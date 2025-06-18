@@ -20,8 +20,8 @@ export default function AnonymousInstagramGuide() {
         How to View Instagram Profiles Anonymously
       </h1>
       <p className="mb-4">
-        If you're looking to view Instagram stories and public profiles
-        anonymously, you're in the right place. InsecView is a free tool that
+        If you&apos;re looking to view Instagram stories and public profiles
+        anonymously, you&apos;re in the right place. InsecView is a free tool that
         lets you search and view public Instagram content without logging in or
         revealing your identity.
       </p>

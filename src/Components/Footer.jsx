@@ -1,4 +1,4 @@
-import { FooterItems } from "@/Utilities/footeritems";
+import { FooterItems } from "../Utilities/footeritems";
 import Link from "next/link";
 import React from "react";
 

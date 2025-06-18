@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ProfileData from "./ProfileData";
 import Link from "next/link";
 
 const SearchHistory = () => {

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import StoryCard from "./StoryCard";
-import { useHighlight } from "@/context/Highlights";
+import { useHighlight } from "../context/Highlights";
 
 const HighlightTray = ({ highlight }) => {
   const [imageUrl, setImageUrl] = useState();

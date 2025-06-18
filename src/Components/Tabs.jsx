@@ -1,4 +1,4 @@
-import { useTabs } from '@/context/TabContext'
+import { useTabs } from '../context/TabContext'
 import React from 'react'
 
 const Tabs = () => {

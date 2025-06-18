@@ -1,11 +1,11 @@
 import React from "react";
 import Tabs from "./Tabs";
-import { useTabs } from "@/context/TabContext";
+import { useTabs } from "../context/TabContext";
 import HighlightTray from "./HighlightTray";
 import PageLoader from "./PageLoader";
 import UserPost from "./UserPost";
 import StoryCard from "./StoryCard";
-import { useHighlight } from "@/context/Highlights";
+import { useHighlight } from "../context/Highlights";
 
 const ProfileData = ({
   fullName,

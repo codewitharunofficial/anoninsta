@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import React, { useState } from "react";
 import axios from "axios";
-import { useUser } from "@/context/UserConext";
+import { useUser } from "../context/UserConext";
 import Loader from "./Loader";
 
 const SearchBar = ({ route, setRoute, setIsUser }) => {
