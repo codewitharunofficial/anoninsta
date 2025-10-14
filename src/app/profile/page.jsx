@@ -17,11 +17,11 @@ const Profile = () => {
   async function getHighlights() {
     setIsHighlightsLoading(true);
     try {
-      const { data } = await axios.post(`/api/highlights/${user?.user?.id}`);
-
+      const { data } = await axios.post(`/api/highlights/${user?.user?.userName}`);
       if (data?.success) {
-        console.log(data.highlights);
         setUser({ ...user, highlights: data?.highlights });
+        setIsHighlightsLoading(false);
+      } else {
         setIsHighlightsLoading(false);
       }
     } catch (error) {
@@ -37,7 +37,7 @@ const Profile = () => {
 
       if (data.success) {
         setUser({ ...user, posts: data?.posts?.items });
-        console.log(data?.posts);
+        // console.log(data?.posts);
         setIsPostsLoading(false);
       }
     } catch (error) {

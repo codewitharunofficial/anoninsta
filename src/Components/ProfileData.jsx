@@ -6,6 +6,7 @@ import PageLoader from "./PageLoader";
 import UserPost from "./UserPost";
 import StoryCard from "./StoryCard";
 import { useHighlight } from "../context/Highlights";
+import HighlightStoryCard from "../Components/HighlightStoryCard"
 
 const ProfileData = ({
   fullName,
@@ -24,8 +25,6 @@ const ProfileData = ({
 }) => {
   const { activeTab, setActiveTab } = useTabs();
   const { media, isMediaLoading } = useHighlight();
-
-  // console.log("Stories From Highlight: ", media);
 
   function formatCounts(count) {
     if (count > 999) {
@@ -158,7 +157,7 @@ const ProfileData = ({
             {media.length > 0 ? (
               <div className="w-screen flex flex-row flex-wrap self-center items-center justify-center gap-10 h-auto p-5 ">
                 {media.map((med, index) => (
-                  <StoryCard key={index} story={med} />
+                  <HighlightStoryCard key={index} story={med} />
                 ))}
               </div>
             ) : (

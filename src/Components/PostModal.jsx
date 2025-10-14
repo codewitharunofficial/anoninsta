@@ -20,7 +20,7 @@ const PostModal = ({ postId, onClose, url, postCode, mediaType }) => {
           `/api/post-comments/${postId}`
         );
         if (data?.success) {
-          console.log(data?.comments);
+          // console.log(data?.comments);
           setUser({ ...user, comments: data?.comments?.items });
           setLoadingComments(false);
         }

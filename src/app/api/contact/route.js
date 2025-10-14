@@ -7,8 +7,6 @@ export async function POST(req) {
     const data = await req.json(); // Parse JSON body
     const { name, email, message } = data;
 
-    console.log({ name, email, message });
-
     // Set up Nodemailer transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
