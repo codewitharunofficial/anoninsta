@@ -5,6 +5,7 @@ import { UserProvider } from "../context/UserConext";
 import { TabsProvider } from "../context/TabContext";
 import { HighlightsProvider } from "../context/Highlights";
 import Footer from "../Components/Footer";
+import OgImage from "../app/og-image.jpg"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -78,7 +79,7 @@ export default function RootLayout({ children }) {
           <HighlightsProvider>
             <UserProvider>
               <div className="flex flex-col md:flex-row gap-1 w-full items-center justify-center mb-3 md:mb-10">
-                <img src="og-image.jpg" className="w-20 h-20 md:h-20 rounded-xl" alt="Insecview logo" />
+                <img src="/og-image.jpg" className="w-20 h-20 md:h-20 rounded-xl" alt="Insecview logo" />
                 <h1 className="text-center md:text-3xl text-xl m-5 text-white font-bold underline underline-offset-4">
                   Anonymous Instagram Profile Viewer
                 </h1>
