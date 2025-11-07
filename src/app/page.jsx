@@ -20,7 +20,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="w-full h-screen sm:h-screen md:h-screen pb-5">
+      <main className="w-screen h-screen sm:h-screen md:h-screen pb-5">
         <SearchBar setRoute={setRoute} route={route} setIsUser={setIsUser} />
         <h4 className="text-white text-center text-lg self-center mt-20 mb-10">
           {!isUser
@@ -28,7 +28,7 @@ const Home = () => {
             : "Profile Will Be Displayed Here :)"}
         </h4>
         {!user?.user_name && <WhyInsecView />}
-      </div>
+      </main>
     </>
   );
 };
