@@ -36,8 +36,8 @@ const Profile = () => {
       const { data } = await axios.post(`/api/posts/${user?.user?.id}`);
 
       if (data.success) {
-        setUser({ ...user, posts: data?.posts?.items });
-        // console.log(data?.posts);
+        setUser({ ...user, posts: data?.posts?.items, post_pagination_token: data?.token });
+        // console.log(data);
         setIsPostsLoading(false);
       }
     } catch (error) {

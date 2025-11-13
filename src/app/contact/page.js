@@ -14,13 +14,11 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
     setStatus('Sending...');
     try {
 
       const {data} = await axios.post('/api/contact', formData);
      
-      console.log(data);
 
       if (data.success) {
         setStatus('Email sent successfully!');

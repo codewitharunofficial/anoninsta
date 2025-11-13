@@ -44,9 +44,8 @@ const ProfileData = ({
   return (
     <div className="flex flex-col w-screen items-center justify-center self-center gap-5 p-10">
       <div
-        className={`flex flex-col w-screen border-gray-100 ${
-          stories?.length > 0 && "border-2 border-pink-600"
-        }`}
+        className={`flex flex-col w-screen border-gray-100 ${stories?.length > 0 && "border-2 border-pink-600"
+          }`}
         style={{ width: 150, height: 150, borderRadius: 100 }}
       >
         <img
@@ -105,27 +104,34 @@ const ProfileData = ({
             </div>
           )
         ) : activeTab === "Profile" ? (
-          posts?.length > 0 ? (
-            <div className="w-screen flex flex-row flex-wrap justify-center self-center gap-10 h-auto">
-              {posts?.map((post, index) => (
-                <UserPost key={index} post={post} />
-              ))}
-            </div>
-          ) : isPostsLoading ? (
-            <PageLoader content={"Posts"} />
-          ) : isPrivate ? (
-            <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10 p-3 border-2 border-white rounded-md">
-              <h3 className=" dark:text-white text-black">
-                The Account Is Private
-              </h3>
-            </div>
-          ) : (
-            <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10 p-3 border-2 border-white rounded-md">
-              <h3 className=" dark:text-white text-black">
-                No Posts Available
-              </h3>
-            </div>
-          )
+          <>
+            {posts?.length > 0 ? (
+              <div className="w-screen flex flex-row flex-wrap justify-center self-center gap-10 h-auto">
+                {posts?.map((post, index) => (
+                  <UserPost key={index} post={post} />
+                ))}
+              </div>
+            ) : isPostsLoading ? (
+              <PageLoader content={"Posts"} />
+            ) : isPrivate ? (
+              <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10 p-3 border-2 border-white rounded-md">
+                <h3 className=" dark:text-white text-black">
+                  The Account Is Private
+                </h3>
+              </div>
+            ) : (
+              <div className="flex flex-row w-full overflow-scroll self-center items-center justify-center gap-10 p-3 border-2 border-white rounded-md">
+                <h3 className=" dark:text-white text-black">
+                  No Posts Available
+                </h3>
+              </div>
+            )}
+            {
+              (!isPostsLoading && posts?.length > 0) && (
+                <button onClick={() => alert("This Functionality will be Implemented soon")} className="py-2 px-6 text-white bg-blue-600 rounded-sm" >More</button>
+              )
+            }
+          </>
         ) : isHighlightsLoading ? (
           <PageLoader content={"Highlights..."} />
         ) : (

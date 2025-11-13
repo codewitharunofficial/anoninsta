@@ -29,7 +29,6 @@ export async function POST(req, { params }) {
 
       try {
         const { data } = await axios.request(options);
-        console.log(data);
         return new Response(
           JSON.stringify(
             {

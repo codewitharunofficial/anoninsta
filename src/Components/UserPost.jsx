@@ -109,7 +109,6 @@ const UserPost = ({ post }) => {
           <video
             onClick={() => {
               openModal();
-              console.log(post?.media_type)
             }}
             className="max-h-96 min-h-96 w-auto cursor-pointer"
             src={post?.video_versions[0]?.url}
