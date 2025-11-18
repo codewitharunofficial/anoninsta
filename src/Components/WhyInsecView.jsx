@@ -1,5 +1,4 @@
 import { whyInsecView } from "../Utilities/WhyInsecView";
-import React from "react";
 
 const WhyInsecView = () => {
   return (

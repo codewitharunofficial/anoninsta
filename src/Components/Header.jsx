@@ -6,7 +6,7 @@ import { FaGithub } from "react-icons/fa";
 const Header = () => {
   return (
     <nav
-      className="bg-blue-500 dark:bg-blue-950 border-white-200 dark:bg-white-900"
+      className="bg-blue-500 w-screen dark:bg-blue-950 border-white-200 dark:bg-white-900"
       style={{
         position: "fixed",
         marginBottom: "5%",

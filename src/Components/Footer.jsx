@@ -4,7 +4,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="w-screen h-48 sm:h-20 bg-blue-500 dark:bg-blue-950 p-3 flex flex-col sm:flex-row md:flex-row gap-3 sm:justify-around sm:px-24 items-center">
+    <footer className="w-screen h-40 sm:h-20 bg-blue-500 dark:bg-blue-600 p-3 flex flex-col sm:flex-row md:flex-row gap-3 sm:justify-around sm:px-24 items-center">
       {FooterItems.map((link, index) =>
         link.type === "internal" ? (
           <a
