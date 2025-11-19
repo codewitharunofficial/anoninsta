@@ -27,15 +27,16 @@ const ProfileData = ({
   const { media, isMediaLoading } = useHighlight();
 
   function formatCounts(count) {
-    if (count > 999) {
+    if (count > 999 && count < 999999) {
       const formattedCount = `${Math.floor(count / 1000)}.${Math.floor(
         (count % 1000) / 1000
       )}K`;
       return formattedCount;
-    } else if (count > 99999) {
-      const formattedCount = `${Math.floor(count / 100000)}.${Math.floor(
-        (count % 100000) / 100000
+    } else if (count > 999999) {
+      const formattedCount = `${Math.floor(count / 10000000)}.${Math.floor(
+        (count % 10000000) / 10000000
       )}M`;
+      return formattedCount;
     } else {
       return count;
     }
