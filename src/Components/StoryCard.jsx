@@ -5,136 +5,116 @@ import { AiFillPlayCircle } from "react-icons/ai";
 import moment from "moment";
 
 const StoryCard = ({ story }) => {
-  const [storyImage, setStoryImage] = useState();
+  const [storyImage, setStoryImage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [videoUrl, setVideoUrl] = useState();
 
-  const onClose = () => {
-    setIsModalOpen(false);
-  };
+  const handleOpen = () => setIsModalOpen(true);
+  const handleClose = () => setIsModalOpen(false);
 
-  const isOpen = () => {
-    setIsModalOpen(true);
-  };
-
-  async function getByassPassedImage(url) {
-    const { data } = await axios.post(
-      `/api/highlight-cover/${encodeURIComponent(url)}`
-    );
-    if (data) {
-      setStoryImage(data);
+  async function fetchBypassedImage(url) {
+    try {
+      const { data } = await axios.post(
+        `/api/highlight-cover/${encodeURIComponent(url)}`
+      );
+      if (data) setStoryImage(data);
+    } catch (err) {
+      console.error("Error fetching image:", err);
     }
   }
 
   useEffect(() => {
     if (story?.media_type !== 2) {
-      getByassPassedImage(
-        story?.image_versions?.items[0]?.url ||
-          story?.image_versions2?.items[0]?.url
-      );
+      const imgUrl =
+        story?.image_versions?.items?.[0]?.url ||
+        story?.image_versions2?.items?.[0]?.url;
+
+      if (imgUrl) fetchBypassedImage(imgUrl);
     }
   }, [story?.media_type]);
 
-  const getBufferedVideo = async (url) => {
+  const downloadMedia = async (url) => {
     try {
       const response = await fetch(
-        `/api/${
-          story?.media_type === 2 ? "download-video" : "download-image"
+        `/api/${story?.media_type === 2 ? "download-video" : "download-image"
         }/${encodeURIComponent(url)}/${story?.user?.username}`
       );
 
-      if (response.ok) {
-        const blob = await response.blob();
-        const downloadableUrl = window.URL.createObjectURL(blob);
+      if (!response.ok) return;
 
-        const link = document.createElement("a");
-        link.href = downloadableUrl;
-        link.download = `${story?.user?.username}_story_${
-          story?.taken_at_date
-        }.${story?.media_type === 2 ? "mp4" : "jpg"}`;
-        document.body.appendChild(link);
-        link.click();
+      const blob = await response.blob();
+      const downloadableUrl = window.URL.createObjectURL(blob);
 
-        //clean up
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(downloadableUrl);
-      }
+      const link = document.createElement("a");
+      link.href = downloadableUrl;
+      link.download = `${story?.user?.username}_story_${story?.taken_at_date}.${story?.media_type === 2 ? "mp4" : "jpg"
+        }`;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadableUrl);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
+  const previewUrl =
+    story?.media_type === 2
+      ? story?.video_versions?.[0]?.url
+      : storyImage;
+
   return (
     <div
-      className="flex flex-row md:w-96 sm:w-4/5 w-4/5 h-1/3 flex-wrap w-sm-100 cursor-pointer items-center justify-center self-center relative "
-      style={{
-        border: "1px solid white",
-        borderRadius: 10,
-      }}
+      className="flex flex-col w-4/5 md:w-96 items-center bg-gray-700 relative rounded-lg border border-white p-3 gap-3 cursor-pointer"
     >
       {isModalOpen && (
         <VideoModal
-          url={
-            story?.media_type === 2 ? story?.video_versions[0]?.url : storyImage
-          }
-          onClose={onClose}
+          url={previewUrl}
           mediaType={story?.media_type}
-          isOpen={isOpen}
+          onClose={handleClose}
         />
       )}
-      <AiFillPlayCircle
-        onClick={() => {
-          isOpen();
-        }}
-        className="hover:bg-black"
-        color="white"
-        size={100}
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "50px",
-          height: "50px",
-          background: "rgba(0, 0, 0, 0.6)",
-          borderRadius: "50%",
-          display: story?.media_type === 2 ? "flex" : "none",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#fff",
-          cursor: "pointer",
-        }}
-      />
-      <div className="flex flex-col gap-3">
-        {story?.media_type === 2 ? (
-          <video
-            onClick={() => isOpen()}
-            className="w-md-1/2 w-sm-full h-full rounded-md"
-            src={story?.video_versions[0]?.url}
-          />
-        ) : (
-          <img
-            onClick={() => isOpen()}
-            className="sm-w-full md-w-7/8 h-full rounded-md"
-            src={storyImage}
-          />
-        )}
-        <h4
-          style={{ transform: "translate(-50%, -100%)" }}
-          className="text-center dark:text-white text-white bg-transparent absolute bottom-20 left-1/2 text-xl"
-        >
-          {moment(story?.taken_at * 1000).fromNow()}
-        </h4>
-      </div>
+
+      {/* Play Icon for Videos */}
+      {story?.media_type === 2 && (
+        <AiFillPlayCircle
+          onClick={handleOpen}
+          size={80}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full cursor-pointer"
+        />
+      )}
+
+      {/* Media Thumbnail */}
+      {story?.media_type === 2 ? (
+        <video
+          src={previewUrl}
+          onClick={handleOpen}
+          className="w-full h-72 object-cover rounded-md"
+        />
+      ) : (
+        <img
+          src={previewUrl}
+          onClick={handleOpen}
+          className="w-full h-72 object-cover rounded-md"
+          alt="Story"
+        />
+      )}
+
+      {/* Timestamp */}
+      <h4 className="text-center text-white bg-black bg-opacity-40 px-3 py-1 rounded mt-2">
+        {moment(story?.taken_at * 1000).fromNow()}
+      </h4>
+
+      {/* Download Button */}
       <button
         onClick={() =>
-          getBufferedVideo(
+          downloadMedia(
             story?.media_type === 2
-              ? story?.video_versions[0]?.url
-              : story?.image_versions?.items[0]?.url
+              ? story?.video_versions?.[0]?.url
+              : story?.image_versions?.items?.[0]?.url
           )
         }
-        className="btn w-full bg-white text-black p-5 rounded-md text-center border-2 border-gray-400 font-bold"
+        className="w-full bg-white text-black p-3 rounded-md font-bold border border-gray-400 hover:bg-purple-600 hover:text-white transition"
       >
         Download
       </button>

@@ -4,11 +4,14 @@ export async function POST(req, { params }) {
   try {
     const { id } = params;
 
+    const pagination_token = params.pagination_token === "null" ? undefined : params.pagination_token;
+    // console.log(id, pagination_token);
     const options = {
       method: "GET",
       url: "https://instagram-scraper-api2.p.rapidapi.com/v1.2/posts",
       params: {
         username_or_id_or_url: id,
+        pagination_token: pagination_token
       },
       headers: {
         "x-rapidapi-key": process.env.SCRAPPER_API_KEY,

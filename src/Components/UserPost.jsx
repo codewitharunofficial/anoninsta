@@ -4,156 +4,134 @@ import axios from "axios";
 import { AiFillLike, AiFillPlayCircle } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
 import PostModal from "./PostModal";
+
 const UserPost = ({ post }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const openModal = () => {
-    setModalOpen(true);
-  };
-  const closeModal = () => {
-    setModalOpen(false);
-  };
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
 
-  async function getByassPassedImage(url) {
+  async function getImage(url) {
     const { data } = await axios.post(
-      `/api/highlight-cover/${encodeURIComponent(
-        url
-      )}`
+      `/api/highlight-cover/${encodeURIComponent(url)}`
     );
-    if (data) {
-      setImageUrl(data);
-    }
+    if (data) setImageUrl(data);
   }
 
   useEffect(() => {
     if (post?.media_type !== 2) {
-      getByassPassedImage(post?.image_versions?.items[0]?.url);
+      getImage(post?.image_versions?.items[0]?.url);
     }
   }, [post?.media_type]);
 
-  const getBufferedVideo = async (url) => {
+  const downloadMedia = async (url) => {
     try {
+      const type = post?.media_type === 2 ? "download-video" : "download-image";
       const response = await fetch(
-        `/api/${
-          post?.media_type === 2 ? "download-video" : "download-image"
-        }/${encodeURIComponent(url)}/${post?.user?.username}`
+        `/api/${type}/${encodeURIComponent(url)}/${post?.user?.username}`
       );
 
       if (response.ok) {
         const blob = await response.blob();
-        const downloadableUrl = window.URL.createObjectURL(blob);
+        const blobUrl = URL.createObjectURL(blob);
 
         const link = document.createElement("a");
-        link.href = downloadableUrl;
-        link.download = `${post?.user?.username}_post_${post?.taken_at}.${
-          post?.media_type === 2 ? "mp4" : "jpg"
-        }`;
+        link.href = blobUrl;
+        link.download = `${post?.user?.username}_post_${post?.taken_at}.${post?.media_type === 2 ? "mp4" : "jpg"
+          }`;
+
         document.body.appendChild(link);
         link.click();
 
-        //clean up
         document.body.removeChild(link);
-        window.URL?.revokeObjectURL(downloadableUrl);
+        URL.revokeObjectURL(blobUrl);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-
   return (
-    <div
-      className=" flex flex-row w-7/8 md:w-96 h-2/5 md:h-2/5 flex-wrap items-center gap-10  bg-gray-500 justify-center self-center relative"
-      style={{
-        border: "1px solid white",
-        borderRadius: 10,
-      }}
-    >
+    <div className="bg-white/10 backdrop-blur-md border border-white/30 rounded-lg overflow-hidden shadow-md w-full max-w-xs mx-auto flex flex-col">
+
       {isModalOpen && (
         <PostModal
           postId={post?.id}
           onClose={closeModal}
-          url={post?.media_type === 2 ? post?.video_versions[0]?.url : imageUrl}
+          url={post?.media_type === 2 ? post?.video_versions?.[0]?.url : imageUrl}
           postCode={post?.code}
           mediaType={post?.media_type}
         />
       )}
 
-      <div className="flex w-96 min-h-96 h-full flex-col m-1 bg-gray-500 relative">
-        <AiFillPlayCircle
-          onClick={() => {
-            openModal();
-            
-          }}
-          className="hover:bg-black"
-          color="green"
-          size={150}
-          style={{
-            position: "absolute",
-            top: "35%",
-            left: "50%",
-            transform: "translate(-70%, -100%)",
-            width: "50px",
-            height: "50px",
-            background: "rgba(0, 0, 0, 0.6)",
-            borderRadius: "50%",
-            display: post?.media_type === 2 ? "flex" : "none",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#fff",
-            cursor: "pointer",
-          }}
-        />
+      {/* Media */}
+      <div className="relative w-full h-64 overflow-hidden bg-black">
         {post?.media_type === 2 ? (
           <video
-            onClick={() => {
-              openModal();
-            }}
-            className="max-h-96 min-h-96 w-auto cursor-pointer"
-            src={post?.video_versions[0]?.url}
+            onClick={openModal}
+            src={post?.video_versions?.[0]?.url}
+            className="w-full h-full object-cover cursor-pointer"
           />
         ) : (
           <img
-            onClick={() => {
-              openModal();
-            }}
-            className=" max-h-96 min-h-96 w-auto cursor-pointer"
+            onClick={openModal}
             src={imageUrl}
+            className="w-full h-full object-cover cursor-pointer"
           />
         )}
-        <div className="flex flex-col items-center gap-2  bg-white w-full p-5 rounded-b-md">
-          <button
-            onClick={() =>
-              getBufferedVideo(
-                post?.media_type === 2
-                  ? post?.video_versions[0]?.url
-                  : post?.image_versions?.items[0]?.url
-              )
-            }
-            className="btn w-full min-w-7/8 bg-white text-black p-5 rounded-md text-center border-2 border-gray-400 font-bold hover:bg-purple-600"
-          >
-            Download
-          </button>
-          <div className="flex flex-row items-center justify-between w-full ">
-            <h4 className="text-start dark:text-black text-black ">
-              {post?.caption?.text?.slice(0, 60)}...
-            </h4>
+
+        {/* Play Icon */}
+        {post?.media_type === 2 && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <AiFillPlayCircle
+              onClick={openModal}
+              className="text-white cursor-pointer opacity-80 hover:scale-110 transition-all"
+              size={60}
+            />
           </div>
-          <div className="flex flex-row items-center gap-10 w-full ">
-            <h4 className="text-start dark:text-black text-black ">
-              <AiFillLike /> {post?.like_count}
-            </h4>
-            <p className="text-start dark:text-black text-black">
-              <FaComment /> {post?.comment_count}
-            </p>
-            <span className="flex self-end">
-              <p className="dark:text-orange-600 text-orange-600 text-sm" >
-              {moment(post?.taken_at * 1000).format('DD/MM/YYYY')}
-              </p>
-                
-            </span>
-          </div>
+        )}
+      </div>
+
+      {/* Info Section */}
+      <div className="bg-white p-4 flex flex-col gap-3 rounded-b-lg">
+
+        {/* Download Button */}
+        <button
+          onClick={() =>
+            downloadMedia(
+              post?.media_type === 2
+                ? post?.video_versions?.[0]?.url
+                : post?.image_versions?.items?.[0]?.url
+            )
+          }
+          className="w-full py-2 bg-purple-600 text-white font-semibold rounded-md hover:bg-purple-700 transition"
+        >
+          Download
+        </button>
+
+        {/* Caption */}
+        {post?.caption?.text && (
+          <p className="text-gray-800 text-sm">
+            {post.caption.text.length > 60
+              ? post.caption.text.slice(0, 60) + "..."
+              : post.caption.text}
+          </p>
+        )}
+
+        {/* Stats */}
+        <div className="flex items-center justify-between text-gray-900 text-sm">
+          <span className="flex items-center gap-1">
+            <AiFillLike size={18} /> {post?.like_count}
+          </span>
+
+          <span className="flex items-center gap-1">
+            <FaComment size={16} /> {post?.comment_count}
+          </span>
+
+          <span className="text-orange-600 text-xs">
+            {moment(post?.taken_at * 1000).format("DD/MM/YYYY")}
+          </span>
         </div>
       </div>
     </div>

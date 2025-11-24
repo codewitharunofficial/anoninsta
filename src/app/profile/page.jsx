@@ -37,7 +37,6 @@ const Profile = () => {
 
       if (data.success) {
         setUser({ ...user, posts: data?.posts?.items, post_pagination_token: data?.token });
-        // console.log(data);
         setIsPostsLoading(false);
       }
     } catch (error) {
@@ -62,7 +61,7 @@ const Profile = () => {
     if (!user?.user) {
       router.replace("/");
     }
-  }, [user?.user]);
+  }, [user?.user, router]);
 
   return (
     <ProfileData
@@ -79,6 +78,11 @@ const Profile = () => {
       isPostsLoading={isPostsLoading}
       posts_count={user?.user?.posts_count}
       isPrivate={user?.user?.isPrivate}
+      setIsPostsLoading={setIsPostsLoading}
+      id={user?.user?.id}
+      post_pagination_token={user?.post_pagination_token}
+      user={user}
+      setUser={setUser}
     />
   );
 };

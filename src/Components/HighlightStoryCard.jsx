@@ -5,127 +5,131 @@ import { AiFillPlayCircle } from "react-icons/ai";
 import moment from "moment";
 
 const HighlightStoryCard = ({ story }) => {
-    const [storyImage, setStoryImage] = useState();
+    const [storyImage, setStoryImage] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [videoUrl, setVideoUrl] = useState();
 
-    const onClose = () => {
-        setIsModalOpen(false);
-    };
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
-    const isOpen = () => {
-        setIsModalOpen(true);
-    };
-
-    async function getByassPassedImage(url) {
-        const { data } = await axios.post(
-            `/api/highlight-cover/${encodeURIComponent(url)}`
-        );
-        if (data) {
-            setStoryImage(data);
+    const fetchBypassedImage = async (url) => {
+        try {
+            const { data } = await axios.post(
+                `/api/highlight-cover/${encodeURIComponent(url)}`
+            );
+            if (data) setStoryImage(data);
+        } catch (err) {
+            console.error("Error fetching highlight story image:", err);
         }
-    }
+    };
 
     useEffect(() => {
-        if (story?.image_versions2) {
-            getByassPassedImage(
-                story?.image_versions2?.candidates[0]?.url
-            );
-        }
-    }, [story?.image_versions2]);
+        const url =
+            story?.image_versions2?.candidates?.[0]?.url ||
+            story?.image_versions?.items?.[0]?.url;
 
-    const getBufferedVideo = async (url) => {
+        if (url) fetchBypassedImage(url);
+    }, [story]);
+
+    const downloadBufferedMedia = async (url) => {
         try {
             const response = await fetch(
                 `/api/${story?.media_type === 2 ? "download-video" : "download-image"
                 }/${encodeURIComponent(url)}/${story?.user?.username}`
             );
 
-            if (response.ok) {
-                const blob = await response.blob();
-                const downloadableUrl = window.URL.createObjectURL(blob);
+            if (!response.ok) return;
 
-                const link = document.createElement("a");
-                link.href = downloadableUrl;
-                link.download = `${story?.user?.username}_story_${story?.taken_at_date
-                    }.${story?.media_type === 2 ? "mp4" : "jpg"}`;
-                document.body.appendChild(link);
-                link.click();
+            const blob = await response.blob();
+            const downloadableUrl = window.URL.createObjectURL(blob);
 
-                //clean up
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(downloadableUrl);
-            }
-        } catch (error) {
-            console.log(error);
+            const link = document.createElement("a");
+            link.href = downloadableUrl;
+            link.download = `${story?.user?.username}_story_${story?.taken_at_date
+                }.${story?.media_type === 2 ? "mp4" : "jpg"}`;
+            document.body.appendChild(link);
+            link.click();
+
+            window.URL.revokeObjectURL(downloadableUrl);
+            link.remove();
+        } catch (err) {
+            console.error("Download failed:", err);
         }
     };
 
+    const mediaUrl =
+        story?.media_type === 2
+            ? story?.video_versions?.[0]?.url
+            : storyImage;
+
     return (
         <div
-            className="flex flex-row md:w-96 sm:w-4/5 w-4/5 h-1/3 flex-wrap w-sm-100 cursor-pointer items-center justify-center self-center relative "
-            style={{
-                border: "1px solid white",
-                borderRadius: 10,
-            }}
+            className="
+        flex flex-col w-4/5 md:w-96 
+        items-center justify-center 
+        border border-white rounded-xl 
+        p-2 relative cursor-pointer 
+        hover:shadow-xl transition-all
+      "
         >
             {isModalOpen && (
                 <VideoModal
-                    url={
-                        story?.video_versions ? story?.video_versions[0]?.url : storyImage
-                    }
-                    onClose={onClose}
-                    mediaType={story?.video_versions ? 2 : 1}
-                    isOpen={isOpen}
+                    url={mediaUrl}
+                    onClose={closeModal}
+                    mediaType={story?.media_type}
                 />
             )}
-            <AiFillPlayCircle
-                onClick={() => {
-                    isOpen();
-                }}
-                className="hover:bg-black"
-                color="white"
-                size={100}
-                style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: "50px",
-                    height: "50px",
-                    background: "rgba(0, 0, 0, 0.6)",
-                    borderRadius: "50%",
-                    display: story?.media_type === 2 ? "flex" : "none",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#fff",
-                    cursor: "pointer",
-                }}
-            />
-            <div className="flex flex-col gap-3">
 
+            {story?.media_type === 2 && (
+                <AiFillPlayCircle
+                    onClick={openModal}
+                    size={90}
+                    className="
+            absolute top-1/2 left-1/2 
+            -translate-x-1/2 -translate-y-1/2 
+            text-white bg-black/60 rounded-full p-3
+            hover:scale-110 transition-all
+          "
+                />
+            )}
+
+            <div className="flex flex-col w-full relative">
                 <img
-                    onClick={() => isOpen()}
-                    className="sm-w-full md-w-7/8 h-full rounded-md"
-                    src={storyImage}
+                    src={storyImage || "/placeholder.jpg"}
+                    onClick={openModal}
+                    className="
+            w-full h-full rounded-md 
+            object-cover hover:opacity-90 transition-all
+          "
+                    alt="highlight-story"
                 />
 
                 <h4
-                    style={{ transform: "translate(-50%, -100%)" }}
-                    className="text-center dark:text-white text-white bg-transparent absolute bottom-20 left-1/2 text-xl"
+                    className="
+            absolute bottom-4 left-1/2 
+            -translate-x-1/2 text-white 
+            text-lg font-semibold 
+            drop-shadow-md
+          "
                 >
                     {moment(story?.taken_at * 1000).fromNow()}
                 </h4>
             </div>
+
             <button
                 onClick={() =>
-                    getBufferedVideo(
+                    downloadBufferedMedia(
                         story?.media_type === 2
-                            ? story?.video_versions[0]?.url
-                            : story?.image_versions2[0]?.url
+                            ? story?.video_versions?.[0]?.url
+                            : story?.image_versions2?.candidates?.[0]?.url
                     )
                 }
-                className="btn w-full bg-white text-black p-5 rounded-md text-center border-2 border-gray-400 font-bold"
+                className="
+          w-full bg-white text-black 
+          p-3 rounded-md mt-3 
+          border border-gray-300 
+          font-semibold text-lg
+          hover:bg-purple-600 hover:text-white transition-all
+        "
             >
                 Download
             </button>
