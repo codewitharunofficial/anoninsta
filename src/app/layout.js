@@ -70,7 +70,7 @@ export default function RootLayout({ children }) {
           <HighlightsProvider>
             <UserProvider>
               {/* Top Section */}
-              <div className="flex flex-col md:flex-row gap-2 items-center justify-center mb-12">
+              <div className="flex flex-row sm:flex-col gap-2 items-center justify-center mb-12">
                 <Image
                   src="/og-image.jpg"
                   className="w-20 h-20 rounded-xl shadow-lg"

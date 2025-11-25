@@ -34,7 +34,7 @@ const Home = () => {
 
       {/* Extra Info Section */}
       {!user?.user_name && (
-        <div className="w-full mt-8">
+        <div className="w-full mt-8 bg-transparent">
           <WhyInsecView />
         </div>
       )}

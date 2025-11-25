@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <footer className="w-screen bg-blue-500 dark:bg-blue-600 py-6 px-5 
       flex flex-col sm:flex-row flex-wrap justify-center sm:justify-around 
-      items-center gap-4">
+      items-center gap-4 fixed bottom-0">
 
       {FooterItems.map((link) =>
         link.type === "internal" ? (
