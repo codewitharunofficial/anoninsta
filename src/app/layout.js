@@ -30,11 +30,13 @@ export const metadata = {
     "public instagram viewer",
     "insecview",
     "iganony",
-    "anonyig",
+    "anonyig"
   ],
   robots: "index, follow",
   metadataBase: new URL("https://insecview.vercel.app"),
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "InsecView - Anonymous Instagram Profile Viewer",
     description: "View Instagram stories and profiles anonymously.",
@@ -58,27 +60,25 @@ export const metadata = {
   },
 };
 
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col w-full overflow-x-hidden bg-gradient-to-br from-cyan-400 to-purple-600`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen w-screen bg-gradient-to-br from-cyan-400 to-purple-600`}
       >
         <Header />
-
-        <main className="flex-1 w-full pt-20 md:pt-28 px-4">
+        <main
+          className="h-screen sm:flex-1 md:flex-1 w-screen items-center overflow-x-hidden scroll-pb-4"
+          style={{
+            paddingTop: "20%",
+          }}
+        >
           <HighlightsProvider>
             <UserProvider>
-              {/* Top Section */}
-              <div className="flex flex-row sm:flex-col gap-2 items-center justify-center mb-12">
-                <Image
-                  src="/og-image.jpg"
-                  className="w-20 h-20 rounded-xl shadow-lg"
-                  alt="Insecview logo"
-                  width={80}
-                  height={80}
-                />
-                <h1 className="text-center text-2xl md:text-4xl text-white font-bold underline underline-offset-4">
+              <div className="flex flex-col md:flex-row gap-1 items-center justify-center mb-3 md:mb-10">
+                <Image src="/og-image.jpg" width={80} height={80} className="rounded-xl" alt="Insecview logo" />
+                <h1 className="text-center md:text-3xl text-xl m-5 text-white font-bold underline underline-offset-4">
                   Anonymous Instagram Profile Viewer
                 </h1>
               </div>
