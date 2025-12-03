@@ -27,7 +27,7 @@ export async function POST(req, { params }, res) {
       // console.log(data);
 
       if (data[0]?.username) {
-        const imageBuffer = await axios.get(data[0]?.profile_pic_url, {
+        const imageBuffer = await axios.get(data[0]?.profile_pic_url_hd, {
           responseType: "arraybuffer",
         });
         const image_base64 = Buffer.from(imageBuffer.data, "binary").toString(

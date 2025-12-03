@@ -8,6 +8,8 @@ import StoryCard from "./StoryCard";
 import { useHighlight } from "../context/Highlights";
 import HighlightStoryCard from "../Components/HighlightStoryCard";
 import axios from "axios";
+import { FaDownload } from "react-icons/fa";
+import Image from "next/image";
 
 const ProfileData = ({
   fullName,
@@ -54,6 +56,23 @@ const ProfileData = ({
     }
   }
 
+  const downloadProfile = async (url) => {
+
+    console.log("IMage BUffer: ", url);
+
+    try {
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${userName}_profile_photo.jpg`;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col items-center px-4 py-10">
 
@@ -62,10 +81,14 @@ const ProfileData = ({
         className={`border-4 ${stories?.length > 0 ? "border-pink-600" : "border-gray-200"
           } rounded-full p-1`}
       >
-        <img
+        <Image
           src={profilePhoto}
-          className="w-36 h-36 md:w-40 md:h-40 rounded-full object-cover"
+          className="w-36 h-36 md:w-40 md:h-40 rounded-full object-cover cursor-pointer"
           alt="Profile"
+          width={160}
+          height={160}
+          onClick={() => downloadProfile(profilePhoto)}
+        // target="_blank"
         />
       </div>
 
