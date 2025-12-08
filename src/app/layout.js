@@ -69,7 +69,7 @@ export default function RootLayout({ children }) {
       >
         <Header />
         <main
-          className="h-screen sm:flex-1 md:flex-1 w-screen items-center overflow-x-hidden scroll-pb-4"
+          className="h-screen sm:flex-1 md:flex-1 w-screen items-center overflow-x-hidden scroll-pb-4 scroll-smooth"
           style={{
             paddingTop: "20%",
           }}

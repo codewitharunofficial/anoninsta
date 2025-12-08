@@ -171,7 +171,7 @@ const ProfileData = ({
               <button
                 onClick={() => loadMorePosts()}
                 disabled={isPostsLoading}
-                className={`mt-6 px-6 py-2 rounded-md text-white ${isPostsLoading ? "bg-gray-600" : "bg-blue-600"
+                className={`mt-6 px-6 py-2 rounded-md text-white ${isPostsLoading ? "bg-green-600" : "bg-blue-600"
                   }`}
               >
                 {isPostsLoading ? "Loading..." : "Load More"}
