@@ -1,149 +1,124 @@
-import axios from "axios";
 import React, { useState } from "react";
+import ReactDOM from "react-dom";
+import axios from "axios";
 import Comment from "./Comment";
-import { useUser } from "../context/UserConext";
 
-const PostModal = ({ postId, onClose, url, postCode, mediaType }) => {
-  // console.log("Post ID: ", postId);
-
-  const [isShowingComments, setIsShowingComments] = useState(false);
-  const [loadingComments, setLoadingComments] = useState(false);
-  const [ifError, setIfError] = useState(false);
-  const { user, setUser } = useUser();
+const PostModal = ({ postId, onClose, url, mediaType }) => {
+  const [showComments, setShowComments] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [comments, setComments] = useState([]);
 
   const fetchComments = async () => {
-    setIsShowingComments(!isShowingComments);
-    if (user?.comments.length === 0) {
-      try {
-        setLoadingComments(true);
-        const { data } = await axios.post(
-          `/api/post-comments/${postId}`
-        );
-        if (data?.success) {
-          // console.log(data?.comments);
-          setUser({ ...user, comments: data?.comments?.items });
-          setLoadingComments(false);
-        }
-      } catch (error) {
-        console.log(error);
-        setLoadingComments(false);
-        setIfError(true);
+    if (showComments) {
+      setShowComments(false);
+      return;
+    }
+
+    if (comments.length > 0) {
+      setShowComments(true);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(false);
+
+      const { data } = await axios.post(`/api/post-comments/${postId}`);
+
+      if (data?.success) {
+        setComments(data?.comments?.items || []);
+        setShowComments(true);
       }
+    } catch (err) {
+      console.error(err);
+      setError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
-  return (
-    <div style={styles.overlay}>
+  return ReactDOM.createPortal(
+    <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
+      {/* Modal */}
       <div
-        className="flex flex-col gap-5 items-center justify-center"
-        style={styles.modal}
+        className="
+          relative bg-white
+          w-full h-full
+          md:w-[95%] md:max-w-[900px] md:h-[92%]
+          rounded-none md:rounded-xl
+          shadow-2xl
+          flex flex-col
+          pt-14 px-4 pb-4
+        "
       >
+        {/* Close Button (ALWAYS ON TOP) */}
         <button
-          onClick={() => {
-            onClose();
-            setUser({ ...user, comments: [] });
-          }}
-          style={styles.closeButton}
+          onClick={onClose}
+          className="
+            absolute top-3 right-3
+            z-50
+            bg-black text-white
+            rounded-full px-2 py-1
+            hover:bg-gray-800
+          "
         >
           ✖
         </button>
-        {mediaType === 2 ? (
-          <video
-            className={`${isShowingComments ? "h-3/5" : "h-4/5"}`}
-            controls
-            style={styles.video}
-            src={url}
-          />
-        ) : (
-          <img
-            className={`${isShowingComments ? "h-3/5" : "h-4/5"}`}
-            controls
-            style={styles.image}
-            src={url}
-          />
-        )}
+
+        {/* Media */}
+        <div className="flex-1 flex items-center justify-center overflow-hidden">
+          {mediaType === 2 ? (
+            <video
+              src={url}
+              controls
+              className="max-h-full w-full rounded-lg pointer-events-auto"
+            />
+          ) : (
+            <img
+              src={url}
+              alt="Post"
+              className="max-h-full w-full object-contain rounded-lg pointer-events-none"
+            />
+          )}
+        </div>
+
+        {/* Actions */}
         <button
-          onClick={() => fetchComments()}
-          className="btn bg-green-500 text-white rounded-md p-2 hover:bg-green-700 items-center"
+          onClick={fetchComments}
+          className="mt-4 bg-green-500 hover:bg-green-700 text-white rounded-md p-2"
         >
-          {isShowingComments
+          {loading
+            ? "Please wait..."
+            : showComments
             ? "Hide Comments"
-            : loadingComments
-            ? "Please Wait..."
             : "Show Comments"}
         </button>
-        {isShowingComments && (
-          <div className="w-full h-40 border-t-2 border-black overflow-scroll">
-            <h4 className="text-black font-bold text-lg">Comments</h4>
-            <div className="w-full flex flex-col gap-3 p-3">
-              {user?.comments?.length > 0 ? (
-                user?.comments?.map((comment, index) => (
+
+        {/* Comments */}
+        {showComments && (
+          <div className="mt-4 border-t pt-3 h-48 overflow-y-auto">
+            <h4 className="font-bold mb-3 text-lg">Comments</h4>
+
+            {comments.length > 0 ? (
+              <div className="flex flex-col gap-3">
+                {comments.map((comment, index) => (
                   <Comment key={index} comment={comment} />
-                ))
-              ) : ifError ? (
-                <h4 className="text-black font-bold text-center">
-                  Unable To Laod Comments
-                </h4>
-              ) : (
-                <h4 className="text-black font-bold text-center">
-                  No Comments Available
-                </h4>
-              )}
-            </div>
+                ))}
+              </div>
+            ) : error ? (
+              <p className="text-center font-semibold">
+                Unable to load comments
+              </p>
+            ) : (
+              <p className="text-center font-semibold">No comments available</p>
+            )}
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
-};
-
-const styles = {
-  overlay: {
-    position: "fixed",
-    top: "5%",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1,
-    overflow: "scroll",
-  },
-  modal: {
-    position: "relative",
-    width: "80%",
-    maxWidth: "700px",
-    background: "#fff",
-    padding: "10px",
-    borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-    height: "90%",
-    // maxHeight: "80%"
-  },
-  closeButton: {
-    position: "absolute",
-    top: "10px",
-    right: "10px",
-    fontSize: "20px",
-    cursor: "pointer",
-    border: "none",
-    backgroundColor: "black",
-    color: "white",
-    padding: 5,
-    borderRadius: 10,
-  },
-  video: {
-    width: "100%",
-    borderRadius: "8px",
-  },
-  image: {
-    width: "100%",
-    borderRadius: "8px",
-    height: "80%",
-    objectFit: "contain",
-  },
 };
 
 export default PostModal;

@@ -7,6 +7,7 @@ import moment from "moment";
 const StoryCard = ({ story }) => {
   const [storyImage, setStoryImage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const handleOpen = () => setIsModalOpen(true);
   const handleClose = () => setIsModalOpen(false);
@@ -32,10 +33,12 @@ const StoryCard = ({ story }) => {
     }
   }, [story?.media_type]);
 
-  const downloadMedia = async (url) => {
+  const downloadMedia = async (url, setIsDownloading) => {
     try {
+      setIsDownloading(true);
       const response = await fetch(
-        `/api/${story?.media_type === 2 ? "download-video" : "download-image"
+        `/api/${
+          story?.media_type === 2 ? "download-video" : "download-image"
         }/${encodeURIComponent(url)}/${story?.user?.username}`
       );
 
@@ -46,27 +49,27 @@ const StoryCard = ({ story }) => {
 
       const link = document.createElement("a");
       link.href = downloadableUrl;
-      link.download = `${story?.user?.username}_story_${story?.taken_at_date}.${story?.media_type === 2 ? "mp4" : "jpg"
-        }`;
+      link.download = `${story?.user?.username}_story_${story?.taken_at_date}.${
+        story?.media_type === 2 ? "mp4" : "jpg"
+      }`;
       document.body.appendChild(link);
       link.click();
 
       document.body.removeChild(link);
+      setIsDownloading(false);
       window.URL.revokeObjectURL(downloadableUrl);
     } catch (error) {
       console.error(error);
+      setIsDownloading(false);
+      alert(error?.message || "Something Went wrong while downloading...");
     }
   };
 
   const previewUrl =
-    story?.media_type === 2
-      ? story?.video_versions?.[0]?.url
-      : storyImage;
+    story?.media_type === 2 ? story?.video_versions?.[0]?.url : storyImage;
 
   return (
-    <div
-      className="flex flex-col w-4/5 md:w-96 items-center bg-gray-700 relative rounded-lg border border-white p-3 gap-3 cursor-pointer"
-    >
+    <div className="flex flex-col w-4/5 md:w-96 items-center bg-gray-700 relative rounded-lg border border-white p-3 gap-3 cursor-pointer">
       {isModalOpen && (
         <VideoModal
           url={previewUrl}
@@ -111,12 +114,13 @@ const StoryCard = ({ story }) => {
           downloadMedia(
             story?.media_type === 2
               ? story?.video_versions?.[0]?.url
-              : story?.image_versions?.items?.[0]?.url
+              : story?.image_versions?.items?.[0]?.url,
+            setIsDownloading
           )
         }
         className="w-full bg-white text-black p-3 rounded-md font-bold border border-gray-400 hover:bg-purple-600 hover:text-white transition"
       >
-        Download
+        {isDownloading ? "Downloading..." : "Download"}
       </button>
     </div>
   );
