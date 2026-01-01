@@ -17,7 +17,9 @@ const Profile = () => {
   async function getHighlights() {
     setIsHighlightsLoading(true);
     try {
-      const { data } = await axios.post(`/api/highlights/${user?.user?.userName}`);
+      const { data } = await axios.post(
+        `/api/highlights/${user?.user?.userName}`
+      );
       if (data?.success) {
         setUser({ ...user, highlights: data?.highlights });
         setIsHighlightsLoading(false);
@@ -35,8 +37,14 @@ const Profile = () => {
     try {
       const { data } = await axios.post(`/api/posts/${user?.user?.id}`);
 
+      console.log(data);
+
       if (data.success) {
-        setUser({ ...user, posts: data?.posts?.items, post_pagination_token: data?.token });
+        setUser({
+          ...user,
+          posts: data?.posts?.items,
+          post_pagination_token: data?.token,
+        });
         setIsPostsLoading(false);
       }
     } catch (error) {

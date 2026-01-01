@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Tabs from "./Tabs";
 import { useTabs } from "../context/TabContext";
 import HighlightTray from "./HighlightTray";
@@ -33,6 +33,7 @@ const ProfileData = ({
 }) => {
   const { activeTab, setActiveTab } = useTabs();
   const { media, isMediaLoading } = useHighlight();
+  const [loadingMore, setLoadingMore ] = useState(false);
 
   function formatCounts(count) {
     if (count >= 1000000) return (count / 1000000).toFixed(1) + "M";
@@ -40,24 +41,27 @@ const ProfileData = ({
     return count;
   }
 
+  console.log(`Posts: ${user?.posts}`);
+
   async function loadMorePosts() {
     try {
-      setIsPostsLoading(true);
-      const { data } = await axios.post(`/api/posts/${id}/${post_pagination_token}`);
+      setLoadingMore(true);
+      const { data } = await axios.post(
+        `/api/posts/${id}/${post_pagination_token}`
+      );
       setUser({
         ...user,
         posts: [...user.posts, ...data?.posts?.items],
         post_pagination_token: data?.token,
       });
-      setIsPostsLoading(false);
+      setLoadingMore(false);
     } catch (error) {
       console.log(error);
-      setIsPostsLoading(false);
+      setLoadingMore(false);
     }
   }
 
   const downloadProfile = async (url) => {
-
     console.log("IMage BUffer: ", url);
 
     try {
@@ -75,11 +79,11 @@ const ProfileData = ({
 
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col items-center px-4 py-10">
-
       {/* Profile Picture */}
       <div
-        className={`border-4 ${stories?.length > 0 ? "border-pink-600" : "border-gray-200"
-          } rounded-full p-1`}
+        className={`border-4 ${
+          stories?.length > 0 ? "border-pink-600" : "border-gray-200"
+        } rounded-full p-1`}
       >
         <Image
           src={profilePhoto}
@@ -88,7 +92,7 @@ const ProfileData = ({
           width={160}
           height={160}
           onClick={() => downloadProfile(profilePhoto)}
-        // target="_blank"
+          // target="_blank"
         />
       </div>
 
@@ -122,7 +126,6 @@ const ProfileData = ({
 
       {/* CONTENT SECTION */}
       <div className="mt-6 w-full flex flex-col items-center">
-
         {/* STORIES TAB */}
         {activeTab === "Stories" && (
           <div className="w-full flex flex-wrap justify-center gap-6">
@@ -143,10 +146,11 @@ const ProfileData = ({
         {/* POSTS TAB */}
         {activeTab === "Profile" && (
           <div className="w-full flex flex-col items-center">
+            {isPostsLoading && posts.length === 0 && (
+              <PageLoader content="Posts" />
+            )}
 
-            {isPostsLoading && posts.length === 0 && <PageLoader content="Posts" />}
-
-            {!isPostsLoading && posts.length > 0 && (
+            {posts.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full">
                 {posts.map((post, i) => (
                   <UserPost key={i} post={post} />
@@ -171,10 +175,11 @@ const ProfileData = ({
               <button
                 onClick={() => loadMorePosts()}
                 disabled={isPostsLoading}
-                className={`mt-6 px-6 py-2 rounded-md text-white ${isPostsLoading ? "bg-green-600" : "bg-blue-600"
-                  }`}
+                className={`mt-6 px-6 py-2 rounded-md text-white ${
+                  isPostsLoading ? "bg-green-600" : "bg-blue-600"
+                }`}
               >
-                {isPostsLoading ? "Loading..." : "Load More"}
+                {loadingMore ? "Loading..." : "Load More"}
               </button>
             )}
           </div>
@@ -205,13 +210,13 @@ const ProfileData = ({
 
                 {/* Highlight Media */}
                 <div className="w-full flex flex-wrap justify-center gap-6 mt-6">
-                  {media.length > 0 ? (
-                    media.map((m, i) => (
-                      <HighlightStoryCard key={i} story={m} />
-                    ))
-                  ) : (
-                    isMediaLoading && <PageLoader content="Highlight Media" />
-                  )}
+                  {media.length > 0
+                    ? media.map((m, i) => (
+                        <HighlightStoryCard key={i} story={m} />
+                      ))
+                    : isMediaLoading && (
+                        <PageLoader content="Highlight Media" />
+                      )}
                 </div>
               </>
             )}
