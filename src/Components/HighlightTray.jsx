@@ -28,6 +28,7 @@ const HighlightTray = ({ highlight }) => {
       setMedia([]);
       const { data } = await axios.post(`/api/highlight-stories/${id}`);
       setMedia(data.highlights);
+      console.log("Highlight Data: ", data.highlights)
       setIsMediaLoading(false);
       // console.log("Stories From Highlight: ", data.highlights[id].items);
     } catch (error) {

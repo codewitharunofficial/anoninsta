@@ -36,7 +36,7 @@ const HighlightStoryCard = ({ story }) => {
       setIsDownloading(true);
       const response = await fetch(
         `/api/${
-          story?.media_type === 2 ? "download-video" : "download-image"
+          story?.has_audio ? "download-video" : "download-image"
         }/${encodeURIComponent(url)}/${story?.user?.username}`
       );
 
@@ -49,7 +49,7 @@ const HighlightStoryCard = ({ story }) => {
       link.href = downloadableUrl;
       link.download = `${story?.user?.username}_story_${moment(
         story?.taken_at * 1000
-      ).fromNow()}.${story?.media_type === 2 ? "mp4" : "jpg"}`;
+      ).fromNow()}.${story?.has_audio ? "mp4" : "jpg"}`;
       document.body.appendChild(link);
       link.click();
 
@@ -64,8 +64,9 @@ const HighlightStoryCard = ({ story }) => {
     }
   };
 
-  const mediaUrl =
-    story?.media_type === 2 ? story?.video_versions?.[0]?.url : storyImage;
+  const mediaUrl = story?.has_audio
+    ? story?.video_versions?.[0]?.url
+    : storyImage;
 
   return (
     <div
@@ -81,11 +82,11 @@ const HighlightStoryCard = ({ story }) => {
         <VideoModal
           url={mediaUrl}
           onClose={closeModal}
-          mediaType={story?.media_type}
+          mediaType={story?.has_audio ? 2 : 1}
         />
       )}
 
-      {story?.media_type === 2 && (
+      {story?.has_audio && (
         <AiFillPlayCircle
           onClick={openModal}
           size={90}
@@ -124,7 +125,7 @@ const HighlightStoryCard = ({ story }) => {
       <button
         onClick={() =>
           downloadBufferedMedia(
-            story?.media_type === 2
+            story?.has_audio
               ? story?.video_versions?.[0]?.url
               : story?.image_versions2?.candidates?.[0]?.url,
             setIsDownloading
