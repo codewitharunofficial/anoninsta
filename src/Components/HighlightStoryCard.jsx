@@ -35,8 +35,7 @@ const HighlightStoryCard = ({ story }) => {
     try {
       setIsDownloading(true);
       const response = await fetch(
-        `/api/${
-          story?.has_audio ? "download-video" : "download-image"
+        `/api/${story?.has_audio ? "download-video" : "download-image"
         }/${encodeURIComponent(url)}/${story?.user?.username}`
       );
 
@@ -93,7 +92,7 @@ const HighlightStoryCard = ({ story }) => {
           className="
             absolute top-1/2 left-1/2 
             -translate-x-1/2 -translate-y-1/2 
-            text-white bg-black/60 rounded-full p-3
+            text-white  rounded-full p-3
             hover:scale-110 transition-all
           "
         />
