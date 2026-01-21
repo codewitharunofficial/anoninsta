@@ -8,7 +8,7 @@ export const FooterItems = [
     },
     {
         id: 1,
-        href: "https://github.com/codewitharunofficial/inseview/issues/new",
+        href: "https://github.com/codewitharunofficial/insecview/issues/new",
         title: "Report An Issue",
         target: "_blank",
         type: "external"
